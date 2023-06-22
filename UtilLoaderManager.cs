@@ -39,16 +39,17 @@ namespace UtilLoader21341
             ModParameters.Harmony.CreateClassProcessor(typeof(SkinHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(StageHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(UpdateEmotionCoinPatch)).Patch();
-            ModParameters.Harmony.CreateClassProcessor(typeof(EmotionSelectionUnitPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(BlockUiRepeat)).Patch();
             if (!ModParameters.BaseModFound) ModParameters.Harmony.CreateClassProcessor(typeof(UnitLimitPatch)).Patch();
             if (ModParameters.EmotionCardUtilLoaderFound) EmotionCardPatch();
+            else ModParameters.Harmony.CreateClassProcessor(typeof(EmotionSelectionUnitPatchWithoutEmotionUtil)).Patch();
         }
 
         private static void EmotionCardPatch()
         {
             ModParameters.Harmony.CreateClassProcessor(typeof(CustomFloorHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(LevelUpUIHotfix)).Patch();
+            ModParameters.Harmony.CreateClassProcessor(typeof(EmotionSelectionUnitPatch)).Patch();
         }
 
         private void Update()

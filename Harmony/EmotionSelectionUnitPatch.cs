@@ -141,4 +141,38 @@ namespace UtilLoader21341.Harmony
             __instance.team.currentSelectEmotionLevel--;
         }
     }
+    [HarmonyPatch]
+    public class EmotionSelectionUnitPatchWithoutEmotionUtil
+    {
+        private static readonly Predicate<BattleUnitModel> MatchAddon = x =>
+            ModParameters.KeypageOptions.Any(y =>
+                y.PackageId == x.Book.BookId.packageId && y.KeypageId == x.Book.BookId.id && y.BannedEmotionCards) ||
+            ModParameters.PassiveOptions.Any(y =>
+                x.passiveDetail.PassiveList.Any(z => y.PackageId == z.id.packageId && y.PassiveId == z.id.id) &&
+                y.BannedEmotionCardSelection);
+
+
+        [HarmonyPostfix]
+        public static void LevelUpUI_Predicate_Patch(LevelUpUI __instance, BattleUnitModel x, ref bool __result)
+        {
+            if (x?.Book == null) return;
+            if (ModParameters.OnPlayEmotionCardUsedBy != null)
+            {
+                __result |= x.Book.BookId != ModParameters.OnPlayEmotionCardUsedBy;
+                return;
+            }
+
+            __result |= MatchAddon(x);
+        }
+
+        [HarmonyTargetMethod]
+        public static MethodBase LevelUpUI_Predicate_Find()
+        {
+            var typeInfo = typeof(LevelUpUI).GetTypeInfo().DeclaredNestedTypes
+                .FirstOrDefault(x => x.Name.Contains("<>c"));
+            ModParameters.MatchInfoEmotionSelection =
+                typeInfo?.DeclaredFields.FirstOrDefault(x => x.Name.Contains("<>9__55_0"));
+            return typeInfo?.DeclaredMethods.FirstOrDefault(x => x.Name.Contains("OnSelectRoutine"));
+        }
+    }
 }
