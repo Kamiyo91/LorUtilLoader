@@ -141,6 +141,7 @@ namespace UtilLoader21341.Harmony
             __instance.team.currentSelectEmotionLevel--;
         }
     }
+
     [HarmonyPatch]
     public class EmotionSelectionUnitPatchWithoutEmotionUtil
     {

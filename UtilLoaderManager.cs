@@ -42,7 +42,8 @@ namespace UtilLoader21341
             ModParameters.Harmony.CreateClassProcessor(typeof(BlockUiRepeat)).Patch();
             if (!ModParameters.BaseModFound) ModParameters.Harmony.CreateClassProcessor(typeof(UnitLimitPatch)).Patch();
             if (ModParameters.EmotionCardUtilLoaderFound) EmotionCardPatch();
-            else ModParameters.Harmony.CreateClassProcessor(typeof(EmotionSelectionUnitPatchWithoutEmotionUtil)).Patch();
+            else
+                ModParameters.Harmony.CreateClassProcessor(typeof(EmotionSelectionUnitPatchWithoutEmotionUtil)).Patch();
         }
 
         private static void EmotionCardPatch()
