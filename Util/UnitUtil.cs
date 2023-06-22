@@ -7,7 +7,6 @@ using LOR_XML;
 using UI;
 using UnityEngine;
 using UtilLoader21341.Models;
-using Random = UnityEngine.Random;
 
 namespace UtilLoader21341.Util
 {
@@ -66,24 +65,41 @@ namespace UtilLoader21341.Util
         }
 
         public static void BattleAbDialog(BattleDialogUI instance, List<AbnormalityCardDialog> dialogs,
-            Color color)
+            Color? color, bool basePositiveColor = false, bool baseNegativeColor = false)
         {
             var component = instance.GetComponent<CanvasGroup>();
-            var dialog = dialogs[Random.Range(0, dialogs.Count)].dialog;
-            var txtAbnormalityDlg = instance._txtAbnormalityDlg;
-            if (txtAbnormalityDlg != null)
+            var dialog = RandomUtil.SelectOne(dialogs).dialog;
+            instance._txtAbnormalityDlg.text = dialog;
+            if (color != null)
             {
-                txtAbnormalityDlg.text = dialog;
-                txtAbnormalityDlg.fontMaterial.SetColor("_GlowColor", color);
-                txtAbnormalityDlg.color = color;
-                var canvas = instance._canvas;
-                if (canvas != null) canvas.enabled = true;
-                component.interactable = true;
-                component.blocksRaycasts = true;
-                txtAbnormalityDlg.GetComponent<AbnormalityDlgEffect>().Init();
+                instance._txtAbnormalityDlg.fontMaterial.SetColor("_GlowColor", color.Value);
+                instance._txtAbnormalityDlg.color = color.Value;
+            }
+            else if (basePositiveColor)
+            {
+                instance._txtAbnormalityDlg.fontMaterial.SetColor("_GlowColor",
+                    SingletonBehavior<BattleManagerUI>.Instance.positiveCoinColor);
+                instance._txtAbnormalityDlg.color = SingletonBehavior<BattleManagerUI>.Instance.positiveTextColor;
+            }
+            else if (baseNegativeColor)
+            {
+                instance._txtAbnormalityDlg.fontMaterial.SetColor("_GlowColor",
+                    SingletonBehavior<BattleManagerUI>.Instance.negativeCoinColor);
+                instance._txtAbnormalityDlg.color = SingletonBehavior<BattleManagerUI>.Instance.negativeTextColor;
             }
 
-            instance.AbnormalityDlgRoutine();
+            if (instance._routine != null)
+            {
+                instance.StopCoroutine(instance._routine);
+                instance._routine = null;
+                instance._canvas.enabled = false;
+            }
+
+            instance._canvas.enabled = true;
+            component.interactable = true;
+            component.blocksRaycasts = true;
+            instance._txtAbnormalityDlg.GetComponent<AbnormalityDlgEffect>().Init();
+            instance._routine = instance.StartCoroutine(instance.AbnormalityDlgRoutine());
         }
 
         public static List<UnitBattleDataModel> UnitsToRecover(StageModel stageModel, UnitDataModel data,
