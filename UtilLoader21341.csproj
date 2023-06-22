@@ -1,0 +1,179 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="packages\Krafs.Publicizer.2.2.1\build\Krafs.Publicizer.props" Condition="Exists('packages\Krafs.Publicizer.2.2.1\build\Krafs.Publicizer.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{207A5CA4-8312-48C0-9729-2A3BC5A8F9E3}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>UtilLoader21341</RootNamespace>
+    <AssemblyName>1UtilLoader21341</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="0Harmony">
+      <HintPath>..\..\CommonDLL\0Harmony.dll</HintPath>
+    </Reference>
+    <Reference Include="1EmotionCardUtil">
+      <HintPath>..\..\EmotionCardsUtil\EmotionCardUtil\bin\Release\1EmotionCardUtil.dll</HintPath>
+    </Reference>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\..\DLL\bin\Release\Assembly-CSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="CustomMapUtility">
+      <HintPath>..\..\CommonDLL\CustomMapUtility.dll</HintPath>
+    </Reference>
+    <Reference Include="Mono.Cecil">
+      <HintPath>..\..\CommonDLL\Mono.Cecil.dll</HintPath>
+    </Reference>
+    <Reference Include="MonoMod.Utils">
+      <HintPath>..\..\CommonDLL\MonoMod.Utils.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Unity.TextMeshPro">
+      <HintPath>..\..\DLL\bin\Release\Unity.TextMeshPro.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AnimationModule">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Library Of Ruina\LibraryOfRuina_Data\Managed\UnityEngine.AnimationModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AssetBundleModule, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Library Of Ruina\LibraryOfRuina_Data\Managed\UnityEngine.AssetBundleModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.AudioModule">
+      <HintPath>..\..\Tower\bin\Release\UnityEngine.AudioModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.CoreModule">
+      <HintPath>..\..\DLL\bin\Release\UnityEngine.CoreModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.ImageConversionModule">
+      <HintPath>..\..\DLL\bin\Release\UnityEngine.ImageConversionModule.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UI">
+      <HintPath>..\..\DLL\bin\Release\UnityEngine.UI.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEngine.UIModule">
+      <HintPath>..\..\..\..\Program Files (x86)\Steam\steamapps\common\Library Of Ruina\LibraryOfRuina_Data\Managed\UnityEngine.UIModule.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Comparers\LorIdAndLorIdRootComparer.cs" />
+    <Compile Include="Enum\CredenzaEnum.cs" />
+    <Compile Include="Enum\PreBattleType.cs" />
+    <Compile Include="Enum\SpriteEnum.cs" />
+    <Compile Include="Extensions\BattleDiceCardBuf_TempCard_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_BaseBufChanged_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_ChangeCardCost_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_CustomInstantIndexRelease_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_Immortal_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_ImmunityToOneStatus_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_ImmunityToStatusAlimentType_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_LockedUnit_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_Uncontrollable_DLL21341.cs" />
+    <Compile Include="Extensions\BattleUnitBuf_Untargetable_DLL21341.cs" />
+    <Compile Include="Extensions\CMUExtensions.cs" />
+    <Compile Include="Extensions\PassiveAbility_RedirectPassive_DLL21341.cs" />
+    <Compile Include="Extensions\WorkshopSkinDataExtension.cs" />
+    <Compile Include="GameObjects\ChangeDiceOrderGameObject.cs" />
+    <Compile Include="GameObjects\SelectableEmotionCardsGameObject.cs" />
+    <Compile Include="GameObjects\SephirahSelectableEmotionCardsGameObject.cs" />
+    <Compile Include="Harmony\CategoryHarmonyPatch.cs" />
+    <Compile Include="Harmony\CustomFloorHarmonyPatch.cs" />
+    <Compile Include="Harmony\EmotionSelectionUnitPatch.cs" />
+    <Compile Include="Harmony\GeneralHarmonyPatch.cs" />
+    <Compile Include="Harmony\KeypageHarmonyPatch.cs" />
+    <Compile Include="Harmony\PassiveHarmonyPatch.cs" />
+    <Compile Include="Harmony\SkinHarmonyPatch.cs" />
+    <Compile Include="Harmony\HotfixTranspilers.cs" />
+    <Compile Include="Harmony\StageHarmonyPatch.cs" />
+    <Compile Include="Harmony\UnitLimitPatch.cs" />
+    <Compile Include="Harmony\UpdateEmotionCoinPatch.cs" />
+    <Compile Include="Models\AssetsBundleOptionModels.cs" />
+    <Compile Include="Models\BuffOptionModels.cs" />
+    <Compile Include="Models\CardOptionModels.cs" />
+    <Compile Include="Models\CategoryOptionModels.cs" />
+    <Compile Include="Models\CustomFloorOptionModels.cs" />
+    <Compile Include="Models\ForceAggroOptionModels.cs" />
+    <Compile Include="Models\GenericModels.cs" />
+    <Compile Include="Models\KeypageOptionModels.cs" />
+    <Compile Include="Models\MapModels.cs" />
+    <Compile Include="Models\PassiveOptionModels.cs" />
+    <Compile Include="Models\SkinOptionModels.cs" />
+    <Compile Include="Models\SpriteOptionModels.cs" />
+    <Compile Include="Models\StageOptionModels.cs" />
+    <Compile Include="Models\UnitModels.cs" />
+    <Compile Include="ModInit.cs" />
+    <Compile Include="ModParameters.cs" />
+    <Compile Include="UtilLoaderManager.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Util\ArtUtil.cs" />
+    <Compile Include="Util\AssetBundleManager.cs" />
+    <Compile Include="Util\BuffUtil.cs" />
+    <Compile Include="Util\CardUtil.cs" />
+    <Compile Include="Util\CustomEmotionTool.cs" />
+    <Compile Include="Util\DiceEffectUtil.cs" />
+    <Compile Include="Util\GenericUtil.cs" />
+    <Compile Include="Util\LocalizationUtil.cs" />
+    <Compile Include="Util\MapUtil.cs" />
+    <Compile Include="Util\MechUtil.cs" />
+    <Compile Include="Util\NpcMechUtil.cs" />
+    <Compile Include="Util\ParticleEffectsUtil.cs" />
+    <Compile Include="Util\PassiveUtil.cs" />
+    <Compile Include="Util\SephirahEmotionTool.cs" />
+    <Compile Include="Util\SephirahUtil.cs" />
+    <Compile Include="Util\StageButtonTool.cs" />
+    <Compile Include="Util\UnitLimitUtil.cs" />
+    <Compile Include="Util\UnitUtil.cs" />
+    <Compile Include="Util\UtilComparer.cs" />
+    <Compile Include="Util\UtilExtensions.cs" />
+    <Compile Include="Util\UtilModLoader.cs" />
+    <Compile Include="Util\UtilTools.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Publicize Include="Assembly-CSharp" />
+    <Publicize Include="CustomMapUtility" />
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('packages\Krafs.Publicizer.2.2.1\build\Krafs.Publicizer.props')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Krafs.Publicizer.2.2.1\build\Krafs.Publicizer.props'))" />
+    <Error Condition="!Exists('packages\Krafs.Publicizer.2.2.1\build\Krafs.Publicizer.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\Krafs.Publicizer.2.2.1\build\Krafs.Publicizer.targets'))" />
+  </Target>
+  <Import Project="packages\Krafs.Publicizer.2.2.1\build\Krafs.Publicizer.targets" Condition="Exists('packages\Krafs.Publicizer.2.2.1\build\Krafs.Publicizer.targets')" />
+</Project>

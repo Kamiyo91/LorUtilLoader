@@ -1,0 +1,39 @@
+﻿namespace UtilLoader21341.Extensions
+{
+    public class BattleUnitBuf_LockedUnit_DLL21341 : BattleUnitBuf_BaseBufChanged_DLL21341
+    {
+        private int _breakedDice;
+
+        public BattleUnitBuf_LockedUnit_DLL21341(ActionDetail actionDetail = ActionDetail.NONE,
+            bool infinite = false, bool lastOneScene = true, int lastForXScenes = 0) : base(actionDetail, infinite,
+            lastOneScene, lastForXScenes)
+        {
+        }
+
+        public override bool IsTargetable()
+        {
+            return false;
+        }
+
+        public override void OnRollSpeedDice()
+        {
+            _breakedDice = _owner.view.speedDiceSetterUI.SpeedDicesCount;
+            for (var i = 0; i < _breakedDice; i++)
+            {
+                _owner.speedDiceResult[i].value = 0;
+                _owner.speedDiceResult[i].breaked = true;
+                _owner.view.speedDiceSetterUI.GetSpeedDiceByIndex(i).BreakDice(true, true);
+            }
+        }
+
+        public override int SpeedDiceBreakedAdder()
+        {
+            return _breakedDice;
+        }
+
+        public override void OnRoundStart()
+        {
+            _owner.turnState = BattleUnitTurnState.BREAK;
+        }
+    }
+}
