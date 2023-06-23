@@ -325,7 +325,7 @@ namespace UtilLoader21341.Util
                 LibraryModel.Instance.ClearInfo.GetClearCount(new LorId(num.PackageId, num.Id)) <= 0);
         }
 
-        public static void ChangeLoneFixerPassive(Faction unitFaction, PassiveAbilityBase passive)
+        public static void ChangeLoneFixerPassive<T>(Faction unitFaction) where T : PassiveAbilityBase, new()
         {
             foreach (var unit in BattleObjectManager.instance.GetAliveList(unitFaction))
             {
@@ -333,7 +333,7 @@ namespace UtilLoader21341.Util
                         PassiveAbility_230008
                         passiveLone)) continue;
                 unit.passiveDetail.DestroyPassive(passiveLone);
-                unit.passiveDetail.AddPassive(passive);
+                unit.passiveDetail.AddPassive(new T());
                 //unit.passiveDetail.OnCreated();
             }
         }
