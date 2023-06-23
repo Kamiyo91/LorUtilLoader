@@ -344,7 +344,7 @@ namespace UtilLoader21341.Util
                 .GetAliveList(otherSide ? owner.faction.ReturnOtherSideFaction() : owner.faction).Count(x =>
                     ModParameters.PassiveOptions.Any(y =>
                         x.passiveDetail.PassiveList.Exists(z =>
-                            y.PackageId == z.id.packageId && y.PassiveId == z.id.id && y.IsSupportPassive)));
+                            y.PackageId == z.id.packageId && y.PassiveId == z.id.id && !y.IsSupportPassive)));
         }
 
         public static List<BattleUnitModel> ExcludeSupportChars(BattleUnitModel owner, bool otherSide = false)
@@ -353,7 +353,7 @@ namespace UtilLoader21341.Util
                 .GetAliveList(otherSide ? owner.faction.ReturnOtherSideFaction() : owner.faction).Where(x =>
                     ModParameters.PassiveOptions.Any(y =>
                         x.passiveDetail.PassiveList.Exists(z =>
-                            y.PackageId == z.id.packageId && y.PassiveId == z.id.id && y.IsSupportPassive)))
+                            y.PackageId == z.id.packageId && y.PassiveId == z.id.id && !y.IsSupportPassive)))
                 .ToList();
         }
 
