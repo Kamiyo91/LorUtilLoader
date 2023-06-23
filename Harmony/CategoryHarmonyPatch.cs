@@ -10,6 +10,7 @@ namespace UtilLoader21341.Harmony
     public class CategoryHarmonyPatch
     {
         [HarmonyPostfix]
+        [HarmonyPriority(0)]
         [HarmonyPatch(typeof(UIBookStoryChapterSlot), "SetEpisodeSlots")]
         public static void UIBookStoryChapterSlot_SetEpisodeSlots(UIBookStoryChapterSlot __instance)
         {
