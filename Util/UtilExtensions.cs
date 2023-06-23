@@ -388,7 +388,8 @@ namespace UtilLoader21341.Util
         public static T CheckPermanentBuff<T>(this BattleUnitModel owner, bool active = true, int startStacks = 0)
             where T : BattleUnitBuf, new()
         {
-            if (!active || owner.bufListDetail.HasBuf<T>()) return null;
+            if (!active) return null;
+            if (owner.bufListDetail.HasBuf<T>()) return owner.GetActiveBuff<T>();
             return (T)owner.AddBuff<T>(startStacks);
         }
     }
