@@ -109,6 +109,7 @@
     <Compile Include="GameObjects\SephirahSelectableEmotionCardsGameObject.cs" />
     <Compile Include="Harmony\CategoryHarmonyPatch.cs" />
     <Compile Include="Harmony\CustomFloorHarmonyPatch.cs" />
+    <Compile Include="Harmony\EmotionEgoCardSelectionPatch.cs" />
     <Compile Include="Harmony\EmotionSelectionUnitPatch.cs" />
     <Compile Include="Harmony\GeneralHarmonyPatch.cs" />
     <Compile Include="Harmony\KeypageHarmonyPatch.cs" />

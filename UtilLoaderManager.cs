@@ -51,6 +51,7 @@ namespace UtilLoader21341
             ModParameters.Harmony.CreateClassProcessor(typeof(CustomFloorHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(LevelUpUIHotfix)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(EmotionSelectionUnitPatch)).Patch();
+            ModParameters.Harmony.CreateClassProcessor(typeof(EmotionEgoCardSelectionPatch)).Patch();
         }
 
         private void Update()
