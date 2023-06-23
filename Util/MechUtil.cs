@@ -12,13 +12,13 @@ namespace UtilLoader21341.Util
     {
         public static bool SurviveCheck<T>(this BattleUnitModel owner, int dmg, int surviveHp, ref bool ignore,
             int recoverToHp = 20, bool nearDeathBuff = false, bool recoverLight = false,
-            List<AbnormalityCardDialog> dialog = null, Color? color = null) where T : BattleUnitBuf, new()
+            List<AbnormalityCardDialog> dialog = null, Color? color = null,bool positiveColor = false,bool negativeColor = false) where T : BattleUnitBuf, new()
         {
             if (owner.hp - dmg > surviveHp || ignore) return false;
             ignore = true;
             owner.UnitReviveAndRecovery(0, recoverLight);
             if (dialog != null && dialog.Any())
-                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green);
+                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green,positiveColor,negativeColor);
             owner.SetHp(recoverToHp);
             if (nearDeathBuff)
                 owner.bufListDetail.AddBufWithoutDuplication(new T());
@@ -30,20 +30,20 @@ namespace UtilLoader21341.Util
 
         public static void ReviveCheck(this BattleUnitModel owner, ref bool ignore, int recoverHp = 20,
             bool recoverLight = false, List<AbnormalityCardDialog> dialog = null, Color? color = null,
-            bool forcedRetreat = false)
+            bool forcedRetreat = false,bool positiveColor = false, bool negativeColor = false)
         {
             if (ignore || !owner.IsDead()) return;
             ignore = true;
             owner.UnitReviveAndRecovery(recoverHp, recoverLight);
             if (dialog != null && dialog.Any())
-                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green);
+                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green,positiveColor,negativeColor);
             if (forcedRetreat) owner.forceRetreat = true;
         }
 
         public static bool EgoActiveWithMapChange<T, T2>(this BattleUnitModel owner, ref bool ignore,
             ref bool mapActive, string egoskinName = "",
             bool refreshUI = false, bool isBaseGameSkin = false, List<LorId> emotionCardsId = null,
-            List<AbnormalityCardDialog> dialog = null, Color? color = null,
+            List<AbnormalityCardDialog> dialog = null, Color? color = null, bool positiveColor = false, bool negativeColor = false,
             MapModelRoot mapModel = null)
             where T : BattleUnitBuf, new() where T2 : MapManager, ICMU, new()
         {
@@ -67,7 +67,7 @@ namespace UtilLoader21341.Util
                     owner.personalEgoDetail.AddCard(id);
             if (refreshUI) UnitUtil.RefreshCombatUI();
             if (dialog != null && dialog.Any())
-                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green);
+                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green, positiveColor, negativeColor);
             if (mapModel != null)
                 MapUtil.ChangeToEgoMap<T2>(mapModel, CustomMapHandler.GetCMU(owner.Book.BookId.packageId),
                     ref mapActive);
@@ -76,7 +76,7 @@ namespace UtilLoader21341.Util
 
         public static bool EgoActive<T>(this BattleUnitModel owner, ref bool ignore, string egoskinName = "",
             bool refreshUI = false, bool isBaseGameSkin = false, List<LorId> emotionCardsId = null,
-            List<AbnormalityCardDialog> dialog = null, Color? color = null)
+            List<AbnormalityCardDialog> dialog = null, Color? color = null, bool positiveColor = false, bool negativeColor = false)
             where T : BattleUnitBuf, new()
         {
             if (ignore || owner.bufListDetail.HasAssimilation()) return false;
@@ -99,7 +99,7 @@ namespace UtilLoader21341.Util
                     owner.personalEgoDetail.AddCard(id);
             if (refreshUI) UnitUtil.RefreshCombatUI();
             if (dialog != null && dialog.Any())
-                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green);
+                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green, positiveColor, negativeColor);
             return true;
         }
 
