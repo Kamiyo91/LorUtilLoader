@@ -63,12 +63,12 @@ namespace UtilLoader21341.Util
             EmotionCardUtilLoader.LoadModsAfter();
         }
 
-        public static BattleEffectSound PlaySound(AudioClip audio, float volumeControl = 1.5f)
+        public static BattleEffectSound PlaySound(AudioClip audio, float volumeControl = 1.5f, bool loop = false)
         {
             if (SingletonBehavior<BattleSoundManager>.Instance == null) return null;
             var sound = Object.Instantiate(SingletonBehavior<BattleSoundManager>.Instance.effectSoundPrefab);
             var soundVolume = SingletonBehavior<BattleSoundManager>.Instance.VolumeFX * volumeControl;
-            sound.Init(audio, soundVolume);
+            sound.Init(audio, soundVolume, loop);
             return sound;
         }
     }
