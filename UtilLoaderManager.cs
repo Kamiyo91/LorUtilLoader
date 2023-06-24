@@ -21,6 +21,7 @@ namespace UtilLoader21341
             LocalizationUtil.RemoveError();
             SceneManager.sceneLoaded += GenericUtil.OnLoadingScreen;
         }
+
         private static void InitGameObject()
         {
             var gameObject = new GameObject("LoR.UtilLoaderManager21341");

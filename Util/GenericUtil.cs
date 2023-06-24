@@ -62,6 +62,7 @@ namespace UtilLoader21341.Util
         {
             EmotionCardUtilLoader.LoadModsAfter();
         }
+
         public static BattleEffectSound PlaySound(AudioClip audio, float volumeControl = 1.5f)
         {
             if (SingletonBehavior<BattleSoundManager>.Instance == null) return null;
