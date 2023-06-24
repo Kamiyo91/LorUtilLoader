@@ -13,7 +13,8 @@ namespace UtilLoader21341.Harmony
             ref EmotionEgoXmlInfo __result)
         {
             if (!ModParameters.EgoAndEmotionCardChanged.TryGetValue(Singleton<StageController>.Instance.CurrentFloor,
-                    out _)) return;
+                    out var savedOption)) return;
+            if (!savedOption.IsActive) return;
             var cardList = Singleton<EmotionEgoXmlList>.Instance
                 .GetDataList(Singleton<StageController>.Instance.CurrentFloor).Where(x => !x.isLock).ToList();
             cardList.RemoveAll(x => duplicated.Exists(y => x.CardId == y.CardId && x.Sephirah == y.Sephirah));
