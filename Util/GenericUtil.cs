@@ -3,7 +3,9 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 using EmotionCardUtil;
+using UnityEngine;
 using UnityEngine.SceneManagement;
+using Object = UnityEngine.Object;
 
 namespace UtilLoader21341.Util
 {
@@ -59,6 +61,14 @@ namespace UtilLoader21341.Util
         public static void LoadEmotionPart()
         {
             EmotionCardUtilLoader.LoadModsAfter();
+        }
+        public static BattleEffectSound PlaySound(AudioClip audio, float volumeControl = 1.5f)
+        {
+            if (SingletonBehavior<BattleSoundManager>.Instance == null) return null;
+            var sound = Object.Instantiate(SingletonBehavior<BattleSoundManager>.Instance.effectSoundPrefab);
+            var soundVolume = SingletonBehavior<BattleSoundManager>.Instance.VolumeFX * volumeControl;
+            sound.Init(audio, soundVolume);
+            return sound;
         }
     }
 }
