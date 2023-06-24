@@ -87,5 +87,25 @@ namespace UtilLoader21341.Util
             if (UnitUtil.SupportCharCheck(passive.owner) < 2)
                 passive.owner.bufListDetail.AddKeywordBufByEtc(KeywordBuf.Strength, 3);
         }
+
+        public static void ChangePassiveItem(PassiveXmlList instance, string packageId)
+        {
+            var passiveOptions =
+                ModParameters.PassiveOptions.Where(x => x.PackageId == packageId && x.IsBaseGamePassive);
+            foreach (var passiveToChange in passiveOptions)
+            {
+                var passive = instance.GetDataAll().FirstOrDefault(x =>
+                    string.IsNullOrEmpty(x.id.packageId) && x.id.id == passiveToChange.PassiveId);
+                if (passive == null) continue;
+                passive.script = passiveToChange.Script;
+            }
+        }
+
+        //Private because it should not be used
+        private static void AddPassiveItem(List<PassiveXmlInfo> passives)
+        {
+            if (!passives.Any()) return;
+            PassiveXmlList.Instance.AddPassivesByMod(passives);
+        }
     }
 }

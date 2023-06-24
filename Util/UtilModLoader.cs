@@ -68,6 +68,7 @@ namespace UtilLoader21341.Util
                 try
                 {
                     var modId = modContentInfo.invInfo.workshopInfo.uniqueId;
+                    PassiveUtil.ChangePassiveItem(PassiveXmlList.Instance, modId);
                     CardUtil.ChangeCardItem(ItemXmlDataList.instance, modId);
                     ArtUtil.PreLoadBufIcons();
                 }

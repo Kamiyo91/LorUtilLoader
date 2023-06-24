@@ -21,21 +21,29 @@ namespace UtilLoader21341.Util
         {
             try
             {
+                var defaultKeyword = ModParameters.DefaultKeyWordOptions.FirstOrDefault(x => x.PackageId == packageId);
                 var dictionary = instance._cardInfoTable;
                 var list = instance._cardInfoList;
                 if (dictionary == null) return;
-                var cardsToChange = ModParameters.CardOptions.Where(x => x.PackageId == packageId);
+                var cardsToChange = ModParameters.CardOptions.Where(x => x.PackageId == packageId).ToList();
                 foreach (var cardOption in cardsToChange)
-                foreach (var item in dictionary
-                             .Where(x => x.Key.packageId == packageId && cardOption.Ids.Contains(x.Key.id)).ToList())
-                    SetCustomCardOption(cardOption.Option, cardOption.Keywords, item.Key, ref dictionary, ref list);
+                foreach (var item in dictionary.Where(x =>
+                             x.Key.packageId == packageId && cardOption.Ids.Contains(x.Key.id)))
+                    SetCustomCardOption(cardOption.Option, cardOption.Keywords, item.Value, list,
+                        defaultKeyword?.Keyword ?? "");
                 var baseGameCardsToChange =
                     ModParameters.CardOptions.Where(x => x.PackageId == packageId && x.IsBaseGameCard);
                 foreach (var cardOption in baseGameCardsToChange)
                 foreach (var item in dictionary
                              .Where(x => string.IsNullOrEmpty(x.Key.packageId) && cardOption.Ids.Contains(x.Key.id))
                              .ToList())
-                    SetCustomCardOption(cardOption.Option, cardOption.Keywords, item.Key, ref dictionary, ref list);
+                    SetCustomCardOption(cardOption.Option, cardOption.Keywords, item.Value, list,
+                        defaultKeyword?.Keyword ?? "");
+                foreach (var item in dictionary
+                             .Where(x => x.Key.packageId == packageId && !cardsToChange.Exists(y =>
+                                 x.Key.packageId == y.PackageId && y.Ids.Contains(x.Key.id)))
+                             .ToList())
+                    item.Value.Keywords.SetKeywords(new List<string> { defaultKeyword?.Keyword ?? "" });
             }
             catch (Exception ex)
             {
@@ -44,55 +52,25 @@ namespace UtilLoader21341.Util
             }
         }
 
-        private static void SetCustomCardOption(CardOption option, IEnumerable<string> keywords, LorId id,
-            ref Dictionary<LorId, DiceCardXmlInfo> cardDictionary, ref List<DiceCardXmlInfo> cardXmlList)
+        private static void SetCustomCardOption(CardOption option, IEnumerable<string> keywords, DiceCardXmlInfo card,
+            ICollection<DiceCardXmlInfo> cardXmlList, string defaultKeyword = "")
         {
-            var defaultKeyword = ModParameters.DefaultKeyWordOptions.FirstOrDefault(x => x.PackageId == id.packageId);
-            if (defaultKeyword != null)
-                keywords = keywords.Prepend(defaultKeyword.Keyword);
+            if (!string.IsNullOrEmpty(defaultKeyword)) keywords = keywords.Prepend(defaultKeyword);
             else if (option == CardOption.Basic) return;
-            var cardOptions = option == CardOption.Basic ? new List<CardOption>() : new List<CardOption> { option };
-            var diceCardXmlInfo2 = CardOptionChange(cardDictionary[id], cardOptions, keywords.ToList());
-            cardDictionary[id] = diceCardXmlInfo2;
-            cardXmlList.Add(diceCardXmlInfo2);
+            card.Keywords.SetKeywords(keywords.ToList());
+            card.optionList.Add(option);
+            cardXmlList.Add(card);
         }
 
-        private static DiceCardXmlInfo CardOptionChange(DiceCardXmlInfo cardXml, List<CardOption> option,
-            List<string> keywords, string skinName = "", string mapName = "", int skinHeight = 0)
+        private static void SetKeywords(this List<string> cardKeywords, IReadOnlyCollection<string> keywords)
         {
-            if (keywords.Any())
+            if (keywords.All(string.IsNullOrEmpty)) return;
+            cardKeywords.AddRange(keywords.Where(x => !cardKeywords.Contains(x)));
+            cardKeywords = cardKeywords.OrderBy(x =>
             {
-                cardXml.Keywords.AddRange(keywords.Where(x => !cardXml.Keywords.Contains(x)));
-                cardXml.Keywords = cardXml.Keywords.OrderBy(x =>
-                {
-                    var index = x.IndexOf("ModPage", StringComparison.InvariantCultureIgnoreCase);
-                    return index < 0 ? 9999 : index;
-                }).ToList();
-            }
-
-            return new DiceCardXmlInfo(cardXml.id)
-            {
-                workshopID = cardXml.workshopID,
-                workshopName = cardXml.workshopName,
-                Artwork = cardXml.Artwork,
-                Chapter = cardXml.Chapter,
-                category = cardXml.category,
-                DiceBehaviourList = cardXml.DiceBehaviourList,
-                _textId = cardXml._textId,
-                optionList = option.Any() ? option : cardXml.optionList,
-                Priority = cardXml.Priority,
-                Rarity = cardXml.Rarity,
-                Script = cardXml.Script,
-                ScriptDesc = cardXml.ScriptDesc,
-                Spec = cardXml.Spec,
-                SpecialEffect = cardXml.SpecialEffect,
-                SkinChange = string.IsNullOrEmpty(skinName) ? cardXml.SkinChange : skinName,
-                SkinChangeType = cardXml.SkinChangeType,
-                SkinHeight = skinHeight != 0 ? skinHeight : cardXml.SkinHeight,
-                MapChange = string.IsNullOrEmpty(mapName) ? cardXml.MapChange : mapName,
-                PriorityScript = cardXml.PriorityScript,
-                Keywords = cardXml.Keywords
-            };
+                var index = x.IndexOf("ModPage", StringComparison.InvariantCultureIgnoreCase);
+                return index < 0 ? 9999 : index;
+            }).ToList();
         }
 
         public static void InitKeywordsList(List<Assembly> assemblies)

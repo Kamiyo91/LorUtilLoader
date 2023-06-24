@@ -40,7 +40,10 @@ namespace UtilLoader21341.Models
 
         [XmlElement("IgnoreClashPassive")] public bool IgnoreClashPassive;
 
+        [XmlElement("IsBaseGamePassive")] public bool IsBaseGamePassive;
 
+
+        [XmlElement("Script")] public string Script;
         [XmlElement("MultiDeckLabelId")] public List<string> MultiDeckLabelIds = new List<string>();
         [XmlAttribute("PackageId")] public string PackageId = "";
         [XmlAttribute("Id")] public int PassiveId;
