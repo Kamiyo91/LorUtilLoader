@@ -102,6 +102,7 @@
     <Compile Include="Extensions\BattleUnitBuf_Uncontrollable_DLL21341.cs" />
     <Compile Include="Extensions\BattleUnitBuf_Untargetable_DLL21341.cs" />
     <Compile Include="Extensions\CMUExtensions.cs" />
+    <Compile Include="Extensions\PassiveAbility_LoneFixer_DLL21341.cs" />
     <Compile Include="Extensions\PassiveAbility_RedirectPassive_DLL21341.cs" />
     <Compile Include="Extensions\WorkshopSkinDataExtension.cs" />
     <Compile Include="GameObjects\ChangeDiceOrderGameObject.cs" />

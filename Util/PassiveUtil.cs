@@ -75,19 +75,6 @@ namespace UtilLoader21341.Util
             stageModel.SetStageStorgeData($"EmotionUnit{poolName}", emotionCards);
         }
 
-        public static void OnCreatedLoneFixerDesc(this PassiveAbilityBase passive)
-        {
-            passive.rare = Rarity.Uncommon;
-            passive.name = Singleton<PassiveDescXmlList>.Instance.GetName(230008);
-            passive.desc = Singleton<PassiveDescXmlList>.Instance.GetDesc(230008);
-        }
-
-        public static void OnRoundEndLoneFixer(this PassiveAbilityBase passive)
-        {
-            if (UnitUtil.SupportCharCheck(passive.owner) < 2)
-                passive.owner.bufListDetail.AddKeywordBufByEtc(KeywordBuf.Strength, 3);
-        }
-
         public static void ChangePassiveItem(PassiveXmlList instance, string packageId)
         {
             var passiveOptions =
@@ -99,6 +86,14 @@ namespace UtilLoader21341.Util
                 if (passive == null) continue;
                 passive.script = passiveToChange.Script;
             }
+        }
+
+        public static void ChangeLoneFixerPassive()
+        {
+            var loneFixerPassive = PassiveXmlList.Instance.GetDataAll().FirstOrDefault(x => string.IsNullOrEmpty(x.id.packageId) && x.id.id == 230008);
+            if (loneFixerPassive == null) return;
+            loneFixerPassive.script = "LoneFixer_DLL21341";
+
         }
 
         //Private because it should not be used
