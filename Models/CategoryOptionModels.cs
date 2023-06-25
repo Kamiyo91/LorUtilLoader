@@ -23,6 +23,7 @@ namespace UtilLoader21341.Models
         [XmlElement("CategoryBooksId")] public List<int> CategoryBooksId = new List<int>();
 
 
+        [XmlElement("Order")] public int Order;
         [XmlElement("CredenzaBooksId")] public List<int> CredenzaBooksId = new List<int>();
 
 

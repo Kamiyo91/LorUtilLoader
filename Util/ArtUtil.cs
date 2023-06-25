@@ -195,56 +195,54 @@ namespace UtilLoader21341.Util
         {
             var categoryOptions =
                 ModParameters.CategoryOptions.Where(x =>
-                    currentBookModelList.Exists(y => y.BookId.packageId == x.PackageId));
-            var savedPackageId = "";
-            var index = -1;
-            foreach (var categoryOption in categoryOptions)
+                    currentBookModelList.Exists(y => y.BookId.packageId == x.PackageId)).ToList();
+            foreach (var packageId in ModParameters.PackageIds)
             {
-                if (savedPackageId != categoryOption.PackageId)
-                {
-                    index = totalkeysdata.FindIndex(x => x.IsWorkshop && x.workshopId == categoryOption.PackageId);
-                    savedPackageId = categoryOption.PackageId;
-                }
-
+                var index = totalkeysdata.FindIndex(x => x.IsWorkshop && x.workshopId == packageId);
                 if (index == -1) continue;
                 totalkeysdata.RemoveAt(index);
-                var categoryKey =
-                    currentStoryBooksDic.FirstOrDefault(x =>
-                        x.Key.IsWorkshop && x.Key.workshopId == categoryOption.PackageId);
-                if (categoryKey.Key != null) currentStoryBooksDic.Remove(categoryKey.Key);
-
-                var actualKey = new UIStoryKeyData(categoryOption.Chapter,
-                    categoryOption.PackageId + $"_{categoryOption.AdditionalValue}");
-                if (totalkeysdata.Contains(actualKey) && !categoryOption.BaseGameCategory.HasValue)
-                    totalkeysdata.Remove(actualKey);
-                var bookFound = false;
-                if (categoryOption.BaseGameCategory.HasValue)
-                    actualKey = totalkeysdata.Find(x => x.StoryLine == categoryOption.BaseGameCategory.Value);
-                foreach (var book in categoryOption.CategoryBooksId.SelectMany(bookId =>
-                             currentBookModelList.Where(x =>
-                                 x.BookId.packageId == categoryOption.PackageId && x.BookId.id == bookId)))
+                foreach (var categoryOption in categoryOptions.Where(x => x.PackageId == packageId)
+                             .OrderBy(x => x.Order))
                 {
-                    if (actualKey == null)
+                    var categoryKey =
+                        currentStoryBooksDic.FirstOrDefault(x =>
+                            x.Key.IsWorkshop && x.Key.workshopId == categoryOption.PackageId);
+                    if (categoryKey.Key != null) currentStoryBooksDic.Remove(categoryKey.Key);
+
+                    var actualKey = new UIStoryKeyData(categoryOption.Chapter,
+                        categoryOption.PackageId + $"_{categoryOption.AdditionalValue}");
+                    if (totalkeysdata.Contains(actualKey) && !categoryOption.BaseGameCategory.HasValue)
+                        totalkeysdata.Remove(actualKey);
+                    var bookFound = false;
+                    if (categoryOption.BaseGameCategory.HasValue)
+                        actualKey = totalkeysdata.Find(x => x.StoryLine == categoryOption.BaseGameCategory.Value);
+                    foreach (var book in categoryOption.CategoryBooksId.SelectMany(bookId =>
+                                 currentBookModelList.Where(x =>
+                                     x.BookId.packageId == categoryOption.PackageId && x.BookId.id == bookId)))
                     {
-                        actualKey = new UIStoryKeyData(book.ClassInfo.Chapter, categoryOption.BaseGameCategory.Value);
-                        totalkeysdata.Add(actualKey);
+                        if (actualKey == null)
+                        {
+                            actualKey = new UIStoryKeyData(book.ClassInfo.Chapter,
+                                categoryOption.BaseGameCategory.Value);
+                            totalkeysdata.Add(actualKey);
+                        }
+
+                        bookFound = true;
+                        if (!currentStoryBooksDic.ContainsKey(actualKey))
+                        {
+                            var list = new List<BookModel> { book };
+                            currentStoryBooksDic.Add(actualKey, list);
+                        }
+                        else
+                        {
+                            currentStoryBooksDic[actualKey].Add(book);
+                        }
                     }
 
-                    bookFound = true;
-                    if (!currentStoryBooksDic.ContainsKey(actualKey))
-                    {
-                        var list = new List<BookModel> { book };
-                        currentStoryBooksDic.Add(actualKey, list);
-                    }
-                    else
-                    {
-                        currentStoryBooksDic[actualKey].Add(book);
-                    }
+                    if (!bookFound || categoryOption.BaseGameCategory.HasValue) continue;
+                    totalkeysdata.Insert(index, actualKey);
+                    index++;
                 }
-
-                if (!bookFound || categoryOption.BaseGameCategory.HasValue) continue;
-                totalkeysdata.Insert(index, actualKey);
-                index++;
             }
         }
 
