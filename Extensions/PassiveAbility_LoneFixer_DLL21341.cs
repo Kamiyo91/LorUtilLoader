@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static BattleUnitInformationUI;
-using static UnityEngine.UI.GridLayoutGroup;
-using System.Xml.Linq;
-using UtilLoader21341.Util;
+﻿using UtilLoader21341.Util;
 
 namespace UtilLoader21341.Extensions
 {

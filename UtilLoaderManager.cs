@@ -14,7 +14,7 @@ namespace UtilLoader21341
         {
             if (_instance != null) return;
             InitGameObject();
-            PassiveUtil.ChangeLoneFixerPassive(PassiveXmlList.Instance);
+            PassiveUtil.ChangeLoneFixerPassive();
             CardUtil.FillDictionary();
             UtilModLoader.LoadMods();
             GenericUtil.OtherModCheck();

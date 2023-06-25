@@ -90,10 +90,10 @@ namespace UtilLoader21341.Util
 
         public static void ChangeLoneFixerPassive()
         {
-            var loneFixerPassive = PassiveXmlList.Instance.GetDataAll().FirstOrDefault(x => string.IsNullOrEmpty(x.id.packageId) && x.id.id == 230008);
+            var loneFixerPassive = PassiveXmlList.Instance.GetDataAll()
+                .FirstOrDefault(x => string.IsNullOrEmpty(x.id.packageId) && x.id.id == 230008);
             if (loneFixerPassive == null) return;
             loneFixerPassive.script = "LoneFixer_DLL21341";
-
         }
 
         //Private because it should not be used
