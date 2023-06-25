@@ -341,19 +341,15 @@ namespace UtilLoader21341.Util
         public static int SupportCharCheck(BattleUnitModel owner, bool otherSide = false)
         {
             return BattleObjectManager.instance
-                .GetAliveList(otherSide ? owner.faction.ReturnOtherSideFaction() : owner.faction).Count(x =>
-                    ModParameters.PassiveOptions.Any(y =>
-                        x.passiveDetail.PassiveList.Exists(z =>
-                            y.PackageId == z.id.packageId && y.PassiveId == z.id.id && !y.IsSupportPassive)));
+                .GetAliveList(otherSide ? owner.faction.ReturnOtherSideFaction() : owner.faction)
+                .Count(x => !x.IsSupportCharCheck());
         }
 
         public static List<BattleUnitModel> ExcludeSupportChars(BattleUnitModel owner, bool otherSide = false)
         {
             return BattleObjectManager.instance
-                .GetAliveList(otherSide ? owner.faction.ReturnOtherSideFaction() : owner.faction).Where(x =>
-                    ModParameters.PassiveOptions.Any(y =>
-                        x.passiveDetail.PassiveList.Exists(z =>
-                            y.PackageId == z.id.packageId && y.PassiveId == z.id.id && !y.IsSupportPassive)))
+                .GetAliveList(otherSide ? owner.faction.ReturnOtherSideFaction() : owner.faction)
+                .Where(x => !x.IsSupportCharCheck())
                 .ToList();
         }
 
