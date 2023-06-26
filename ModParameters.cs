@@ -80,12 +80,15 @@ namespace UtilLoader21341
 
     public class SavedFloorOptions
     {
-        public SavedFloorOptions(bool isActive = false, CustomFloorOptionRoot floorOptions = null)
+        public SavedFloorOptions(bool isActive = false, CustomFloorOptionRoot floorOptions = null,
+            int? keypageId = null)
         {
             IsActive = isActive;
             FloorOptions = floorOptions;
+            KeypageId = keypageId;
         }
 
+        public int? KeypageId { get; set; }
         public bool IsActive { get; set; }
         public CustomFloorOptionRoot FloorOptions { get; set; }
     }

@@ -59,7 +59,7 @@ namespace UtilLoader21341.Harmony
                     if (ModParameters.EgoAndEmotionCardChanged.ContainsKey(__instance.OwnerSephirah))
                     {
                         ModParameters.EgoAndEmotionCardChanged[__instance.OwnerSephirah] =
-                            new SavedFloorOptions(true, bookOptions.CustomFloorOptions);
+                            new SavedFloorOptions(true, bookOptions.CustomFloorOptions, __state.ClassInfo.id.id);
                         CardUtil.SaveCardsBeforeChange(__instance.OwnerSephirah);
                         CardUtil.ChangeAbnoAndEgo(__instance.OwnerSephirah,
                             bookOptions.CustomFloorOptions);
