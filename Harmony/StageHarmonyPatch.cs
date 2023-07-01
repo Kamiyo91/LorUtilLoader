@@ -104,11 +104,11 @@ namespace UtilLoader21341.Harmony
 
             foreach (var keypageId in stageOption.StageRewardOptions.Keypages.Where(keypageId =>
                          !Singleton<BookInventoryModel>.Instance.GetBookListAll().Exists(x =>
-                             x.GetBookClassInfoId() == new LorId(keypageId.PackageId, keypageId.Id))))
+                             x.GetBookClassInfoId() == new LorId(keypageId.LorId.PackageId, keypageId.LorId.Id))))
             {
                 if (!message) message = true;
-                Singleton<BookInventoryModel>.Instance.CreateBook(new LorId(keypageId.PackageId,
-                    keypageId.Id));
+                Singleton<BookInventoryModel>.Instance.CreateBook(new LorId(keypageId.LorId.PackageId,
+                    keypageId.LorId.Id));
             }
 
             foreach (var card in stageOption.StageRewardOptions.Cards.Where(x =>

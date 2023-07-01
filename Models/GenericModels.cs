@@ -44,7 +44,7 @@ namespace UtilLoader21341.Models
     {
         [XmlElement("Books")] public List<ItemQuantityRoot> Books = new List<ItemQuantityRoot>();
         [XmlElement("Cards")] public List<ItemQuantityRoot> Cards = new List<ItemQuantityRoot>();
-        [XmlElement("Keypages")] public List<LorIdRoot> Keypages = new List<LorIdRoot>();
+        [XmlElement("Keypages")] public List<ItemQuantityRoot> Keypages = new List<ItemQuantityRoot>();
         [XmlElement("MessageId")] public string MessageId = "";
         [XmlElement("SingleTimeReward")] public bool SingleTimeReward = true;
     }

@@ -138,9 +138,9 @@ namespace UtilLoader21341.Harmony
         {
             foreach (var keypageId in ModParameters.RewardOptions.SelectMany(x => x.Keypages).Where(keypageId =>
                          !Singleton<BookInventoryModel>.Instance.GetBookListAll().Exists(x =>
-                             x.GetBookClassInfoId() == new LorId(keypageId.PackageId, keypageId.Id))))
+                             x.GetBookClassInfoId() == new LorId(keypageId.LorId.PackageId, keypageId.LorId.Id))))
             {
-                var lorId = new LorId(keypageId.PackageId, keypageId.Id);
+                var lorId = new LorId(keypageId.LorId.PackageId, keypageId.LorId.Id);
                 var book = Singleton<BookXmlList>.Instance.GetData(lorId);
                 var quantity = 1;
                 switch (book.Rarity)
