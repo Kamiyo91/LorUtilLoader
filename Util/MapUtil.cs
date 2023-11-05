@@ -16,6 +16,13 @@ namespace UtilLoader21341.Util
                 .Invoke(model, new object[] { packageId, model, sephirah });
         }
 
+        public static void InitEnemyMapBattleRush(string packageId, MapModelRoot model)
+        {
+            typeof(MapUtil).GetMethod("InitEnemyMap")
+                ?.MakeGenericMethod(UtilExtensions.TrasformMapNameInType(model.Component, ModParameters.Assemblies))
+                .Invoke(model, new object[] { packageId, model });
+        }
+
         public static void InitSephirahMapGeneric<T>(string packageId, MapModelRoot model, SephirahType sephirah)
             where T : MapManager, ICMU, new()
         {

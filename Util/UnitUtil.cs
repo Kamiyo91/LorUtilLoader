@@ -499,5 +499,51 @@ namespace UtilLoader21341.Util
         {
             return unit.emotionDetail.PassiveList.ToList();
         }
+
+        public static void PreparePreBattleEnemyUnits(List<UnitModelRoot> unitModels, StageModel stage,
+            List<UnitBattleDataModel> unitList)
+        {
+            foreach (var unitParameters in unitModels)
+            {
+                var unitDataModel = new UnitDataModel(new LorId(unitParameters.PackageId, unitParameters.Id));
+                unitDataModel.SetTemporaryPlayerUnitByBook(new LorId(unitParameters.PackageId,
+                    unitParameters.Id));
+                unitDataModel.bookItem.ClassInfo.categoryList.Add(BookCategory.DeckFixed);
+                unitDataModel.isSephirah = false;
+                unitDataModel.SetCustomName(GenericUtil.GetCharacterName(unitParameters.PackageId, "Not Found",
+                    unitParameters.UnitNameId));
+                unitDataModel.CreateDeckByDeckInfo();
+                unitDataModel.forceItemChangeLock = true;
+                if (!string.IsNullOrEmpty(unitParameters.SkinName))
+                    unitDataModel.bookItem.ClassInfo.CharacterSkin = new List<string> { unitParameters.SkinName };
+                var unitBattleDataModel = new UnitBattleDataModel(stage, unitDataModel);
+                unitBattleDataModel.Init();
+                unitList.Add(unitBattleDataModel);
+            }
+        }
+
+        public static void PreparePreBattleAllyUnits(StageLibraryFloorModel instance, List<UnitModelRoot> unitModels,
+            StageModel stage,
+            List<UnitBattleDataModel> unitList)
+        {
+            foreach (var unitParameters in unitModels)
+            {
+                var unitDataModel = new UnitDataModel(new LorId(unitParameters.PackageId, unitParameters.Id),
+                    instance.Sephirah, true);
+                unitDataModel.SetTemporaryPlayerUnitByBook(new LorId(unitParameters.PackageId,
+                    unitParameters.Id));
+                unitDataModel.bookItem.ClassInfo.categoryList.Add(BookCategory.DeckFixed);
+                unitDataModel.isSephirah = false;
+                unitDataModel.SetCustomName(GenericUtil.GetCharacterName(unitParameters.PackageId, "Not Found",
+                    unitParameters.UnitNameId));
+                unitDataModel.CreateDeckByDeckInfo();
+                unitDataModel.forceItemChangeLock = true;
+                if (!string.IsNullOrEmpty(unitParameters.SkinName))
+                    unitDataModel.bookItem.ClassInfo.CharacterSkin = new List<string> { unitParameters.SkinName };
+                var unitBattleDataModel = new UnitBattleDataModel(stage, unitDataModel);
+                unitBattleDataModel.Init();
+                unitList.Add(unitBattleDataModel);
+            }
+        }
     }
 }

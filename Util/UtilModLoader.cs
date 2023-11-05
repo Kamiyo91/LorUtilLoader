@@ -146,6 +146,11 @@ namespace UtilLoader21341.Util
             ModParameters.UnitModels.AddRange(unitModels.Key
                 ? unitModels.Value.UnitModels
                 : new List<UnitModelRoot>());
+            var rushBattleModels =
+                LoadParameters<RushBattleModelsRoot>(path + ModParameters.BaseFolderUri + "RushBattleModels", modId);
+            ModParameters.RushBattleModels.AddRange(rushBattleModels.Key
+                ? rushBattleModels.Value.RushBattleModels
+                : new List<RushBattleModelMainRoot>());
             var assetsOptions =
                 LoadParameters<AssetsBundleOptionsRoot>(path + ModParameters.BaseFolderUri + "AssetsBundleOptions",
                     modId);

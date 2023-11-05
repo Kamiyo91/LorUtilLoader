@@ -41,6 +41,7 @@ namespace UtilLoader21341
             ModParameters.Harmony.CreateClassProcessor(typeof(StageHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(UpdateEmotionCoinPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(BlockUiRepeat)).Patch();
+            ModParameters.Harmony.CreateClassProcessor(typeof(BattleRushHarmonyPatch)).Patch();
             if (!ModParameters.BaseModFound) ModParameters.Harmony.CreateClassProcessor(typeof(UnitLimitPatch)).Patch();
             if (ModParameters.EmotionCardUtilLoaderFound) EmotionCardPatch();
             else

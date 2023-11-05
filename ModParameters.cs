@@ -4,6 +4,7 @@ using System.Reflection;
 using LOR_XML;
 using UnityEngine;
 using UtilLoader21341.Models;
+using UtilLoader21341.StageManager;
 using UtilLoader21341.Util;
 
 namespace UtilLoader21341
@@ -31,6 +32,7 @@ namespace UtilLoader21341
         public static List<BuffOptionRoot> BuffOptions = new List<BuffOptionRoot>();
         public static List<MapModelRoot> MapModels = new List<MapModelRoot>();
         public static List<UnitModelRoot> UnitModels = new List<UnitModelRoot>();
+        public static List<RushBattleModelMainRoot> RushBattleModels = new List<RushBattleModelMainRoot>();
         public static Dictionary<string, LocalizedItem> LocalizedItems = new Dictionary<string, LocalizedItem>();
         public static Dictionary<string, Type> CustomEffects = new Dictionary<string, Type>();
         public static Dictionary<string, string> Path = new Dictionary<string, string>();
@@ -44,9 +46,12 @@ namespace UtilLoader21341
         public static bool EmotionCardUtilLoaderFound = false;
         public static bool BaseModFound = false;
         public static bool ModLoaded = false;
+        public static bool ChangingAct = false;
+        public static string NextActManager = "";
+        public static int RandomWaveStart = 0;
         public static FieldInfo MatchInfoEmotionSelection = null;
-
         public static Dictionary<string, Assets> AssetBundle = new Dictionary<string, Assets>();
+        public static EmenyTeamStageManager_RushBattleLoader_24321 RushBattleManager = null;
     }
 
     public class CustomSprite
