@@ -147,7 +147,7 @@ namespace UtilLoader21341.Util
                 ? unitModels.Value.UnitModels
                 : new List<UnitModelRoot>());
             var rushBattleModels =
-                LoadParameters<RushBattleModelsRoot>(path + ModParameters.BaseFolderUri + "RushBattleModels", modId);
+                LoadParameters<RushBattleModelsRoot>(path + ModParameters.BaseFolderUri + "RushBattleOptions", modId);
             ModParameters.RushBattleModels.AddRange(rushBattleModels.Key
                 ? rushBattleModels.Value.RushBattleModels
                 : new List<RushBattleModelMainRoot>());

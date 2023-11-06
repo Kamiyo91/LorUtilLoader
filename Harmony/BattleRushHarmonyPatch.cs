@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using HarmonyLib;
 using UtilLoader21341.Models;
 using UtilLoader21341.StageManager;
@@ -13,12 +15,11 @@ namespace UtilLoader21341.Harmony
         [HarmonyPostfix]
         public static void StageWaveModel_Init(StageWaveModel __instance, StageModel stage)
         {
+            ModParameters.RushBattleManager = null;
             ModParameters.RandomWaveStart = 0;
             if (ModParameters.ChangingAct)
             {
                 ModParameters.ChangingAct = false;
-                __instance._managerScript = ModParameters.NextActManager;
-                ModParameters.NextActManager = string.Empty;
                 return;
             }
 
@@ -41,8 +42,11 @@ namespace UtilLoader21341.Harmony
                 if (selectedWave == null) return;
             }
 
+            var stageName = string.Empty;
             if (!string.IsNullOrEmpty(selectedWave.StageManagerName))
-                __instance._managerScript = selectedWave.StageManagerName;
+                stageName = selectedWave.StageManagerName;
+            ModParameters.NextActManager =
+                new Tuple<string, List<string>>(stageName, selectedWave.MapStageNames.ToList());
             __instance._availableUnitNumber = selectedWave.UnitAllowed;
             __instance._formation =
                 new FormationModel(Singleton<FormationXmlList>.Instance.GetData(selectedWave.FormationId));
@@ -52,15 +56,31 @@ namespace UtilLoader21341.Harmony
         }
 
         [HarmonyPatch(typeof(StageController), nameof(StageController.StartBattle))]
-        [HarmonyPostfix]
-        public static void StageController_Init(StageController __instance)
+        [HarmonyPrefix]
+        public static void StageController_StartBattle(StageController __instance)
         {
             var rushBattleOptions = ModParameters.RushBattleModels.FirstOrDefault(x =>
                 x.Id == __instance._stageModel.ClassInfo.id.id &&
                 x.PackageId == __instance._stageModel.ClassInfo.id.packageId);
             if (rushBattleOptions == null) return;
+            var stage = __instance._stageModel.GetWave(__instance._currentWave);
+            if (!string.IsNullOrEmpty(ModParameters.NextActManager.Item1))
+                stage._managerScript = ModParameters.NextActManager.Item1;
+            if (ModParameters.NextActManager.Item2.Any())
+            {
+                __instance._stageModel.ClassInfo.mapInfo = new List<string>();
+                foreach (var map in ModParameters.NextActManager.Item2)
+                    __instance._stageModel.ClassInfo.mapInfo.Add(map);
+                ModParameters.NextActManager = new Tuple<string, List<string>>(string.Empty, new List<string>());
+            }
             ModParameters.RushBattleManager = new EmenyTeamStageManager_RushBattleLoader_24321();
-            ModParameters.RushBattleManager.OnWaveStart();
+        }
+
+        [HarmonyPatch(typeof(StageController), nameof(StageController.StartBattle))]
+        [HarmonyPostfix]
+        public static void StageController_StartBattle_Post(StageController __instance)
+        {
+            ModParameters.RushBattleManager?.OnWaveStart();
         }
 
         [HarmonyPatch(typeof(StageController), nameof(StageController.EndBattlePhase))]
@@ -72,7 +92,6 @@ namespace UtilLoader21341.Harmony
                 x.PackageId == __instance._stageModel.ClassInfo.id.packageId);
             if (rushBattleOptions == null || ModParameters.RushBattleManager == null) return;
             ModParameters.RushBattleManager.OnEndBattle();
-            ModParameters.RushBattleManager = null;
         }
     }
 }

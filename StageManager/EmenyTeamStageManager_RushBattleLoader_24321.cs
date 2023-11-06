@@ -55,9 +55,9 @@ namespace UtilLoader21341.StageManager
                         Phases.Remove(key);
                 //if (!string.IsNullOrEmpty(ActualPhase.CmhPackageId))
                 //    Cmh = CustomMapHandler.GetCMU(ActualPhase.CmhPackageId);
-                stageModel.ClassInfo.mapInfo = new List<string>();
-                foreach (var map in ActualPhase.MapStageNames)
-                    stageModel.ClassInfo.mapInfo.Add(map);
+                //stageModel.ClassInfo.mapInfo = new List<string>();
+                //foreach (var map in ActualPhase.MapStageNames)
+                //    stageModel.ClassInfo.mapInfo.Add(map);
                 _isLastWave = Phases.Count < 2;
                 if (!IsInfinite && _isLastWave) return;
                 stageModel._waveList.Add(new StageWaveModel());
@@ -109,7 +109,8 @@ namespace UtilLoader21341.StageManager
                     return;
                 }
 
-                SetParameter(stageModel, MainRushBattleOptions.Waves, MainRushBattleOptions.IsInfinite,
+                SetParameter(stageModel, MainRushBattleOptions.Waves.OrderBy(x => x.WaveOrder).ToList(),
+                    MainRushBattleOptions.IsInfinite,
                     MainRushBattleOptions.IsRandom);
                 //if (FoughtWaves != null && FoughtWaves.Any())
                 //    foreach (var key in FoughtWaves)
@@ -207,7 +208,9 @@ namespace UtilLoader21341.StageManager
             stageWaveInfo.formationId = Mathf.Clamp(ActualPhase.FormationId, 1, 41);
             stageWaveInfo.availableNumber = ActualPhase.UnitAllowed;
             ModParameters.ChangingAct = true;
-            ModParameters.NextActManager = ActualPhase.StageManagerName;
+            var mapList = new List<string>();
+            mapList.AddRange(ActualPhase.MapStageNames);
+            ModParameters.NextActManager = new Tuple<string, List<string>>(ActualPhase.StageManagerName, mapList);
             stageModel._waveList.ElementAt(stageModel._waveList.Count - 1).Init(stageModel, stageWaveInfo);
             var list = new List<UnitBattleDataModel>();
             UnitUtil.PreparePreBattleEnemyUnits(ActualPhase.UnitModels, stageModel, list);
