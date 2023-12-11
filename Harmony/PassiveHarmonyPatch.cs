@@ -221,7 +221,7 @@ namespace UtilLoader21341.Harmony
                 }
 
                 UIOptions.ChangedMultiView = true;
-                if (__instance.currentunit.bookItem.GetCurrentDeckIndex() > 1)
+                if (__instance.currentunit.bookItem.GetCurrentDeckIndex() > labels.Count)
                     __instance.currentunit.ReEquipDeck();
                 ArtUtil.PrepareMultiDeckUI(__instance.multiDeckLayout, labels,
                     packageId);
