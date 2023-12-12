@@ -160,6 +160,7 @@
   <ItemGroup>
     <Compile Include="Comparers\LorIdAndLorIdRootComparer.cs" />
     <Compile Include="Enum\CredenzaEnum.cs" />
+    <Compile Include="Enum\CustomDamageType.cs" />
     <Compile Include="Enum\PreBattleType.cs" />
     <Compile Include="Enum\SpriteEnum.cs" />
     <Compile Include="Extensions\BattleDiceCardBuf_TempCard_DLL21341.cs" />

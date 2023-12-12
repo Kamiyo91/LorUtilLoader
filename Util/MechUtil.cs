@@ -110,6 +110,38 @@ namespace UtilLoader21341.Util
             return true;
         }
 
+        public static bool EgoActive(this BattleUnitModel owner, ref bool ignore, string egoskinName = "",
+            bool refreshUI = false, bool isBaseGameSkin = false, List<LorId> emotionCardsId = null,
+            List<AbnormalityCardDialog> dialog = null, Color? color = null, bool positiveColor = false,
+            bool negativeColor = false)
+        {
+            if (ignore || owner.bufListDetail.HasAssimilation()) return false;
+            ignore = true;
+            if (!string.IsNullOrEmpty(egoskinName))
+            {
+                if (isBaseGameSkin)
+                    owner.UnitData.unitData.bookItem.SetCharacterName(
+                        egoskinName.Equals("BlackSilence4") ? "BlackSilence3" : egoskinName);
+                else
+                    owner.UnitData.unitData.bookItem.ClassInfo.CharacterSkin =
+                        new List<string> { egoskinName };
+                owner.view.SetAltSkin(egoskinName);
+            }
+
+            owner.cardSlotDetail.RecoverPlayPoint(owner.cardSlotDetail.GetMaxPlayPoint());
+            if (emotionCardsId != null && emotionCardsId.Any())
+                foreach (var id in emotionCardsId)
+                    if (owner.faction == Faction.Player)
+                        owner.personalEgoDetail.AddCard(id);
+                    else
+                        owner.allyCardDetail.AddNewCardToDeck(id);
+            if (refreshUI) UnitUtil.RefreshCombatUI();
+            if (dialog != null && dialog.Any())
+                UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green, positiveColor,
+                    negativeColor);
+            return true;
+        }
+
         public static void DeactiveEgo<T>(this BattleUnitModel owner, ref bool ignore, ref bool mapActive,
             string egoskinName = "",
             bool refreshUI = false, LorId egoCard = null, List<LorId> emotionCardsId = null,

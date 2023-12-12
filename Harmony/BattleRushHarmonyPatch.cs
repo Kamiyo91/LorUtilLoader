@@ -73,6 +73,7 @@ namespace UtilLoader21341.Harmony
                     __instance._stageModel.ClassInfo.mapInfo.Add(map);
                 ModParameters.NextActManager = new Tuple<string, List<string>>(string.Empty, new List<string>());
             }
+
             ModParameters.RushBattleManager = new EmenyTeamStageManager_RushBattleLoader_24321();
         }
 

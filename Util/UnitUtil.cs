@@ -6,6 +6,7 @@ using LOR_DiceSystem;
 using LOR_XML;
 using UI;
 using UnityEngine;
+using UtilLoader21341.Enum;
 using UtilLoader21341.Models;
 
 namespace UtilLoader21341.Util
@@ -51,6 +52,11 @@ namespace UtilLoader21341.Util
             if (owner.UnitData.unitData.bookItem == owner.UnitData.unitData.CustomBookItem) return false;
             owner.view.ChangeSkin(owner.UnitData.unitData.CustomBookItem.GetCharacterName());
             return true;
+        }
+
+        public static bool CheckOriginalPage(LorId originalPage, LorId actualPage)
+        {
+            return originalPage.packageId == actualPage.packageId && originalPage.id == actualPage.id;
         }
 
         public static bool CheckSkinUnitData(UnitDataModel unitData)
@@ -544,6 +550,46 @@ namespace UtilLoader21341.Util
                 unitBattleDataModel.Init();
                 unitList.Add(unitBattleDataModel);
             }
+        }
+
+        public static List<AtkResistType> GetAttackTypes(this BattleUnitModel unit, List<AtkResistType> list)
+        {
+            var atkResistType = new List<AtkResistType>();
+            foreach (var item in list)
+                switch (item.DamageType)
+                {
+                    case CustomDamageType.HP:
+                        atkResistType.Add(new AtkResistType(item.BehaviourDetail, item.DamageType,
+                            unit.GetResistHP(item.BehaviourDetail)));
+                        break;
+                    case CustomDamageType.BP:
+                        atkResistType.Add(new AtkResistType(item.BehaviourDetail, item.DamageType,
+                            unit.GetResistBP(item.BehaviourDetail)));
+                        break;
+                    case CustomDamageType.Both:
+                        atkResistType.Add(new AtkResistType(item.BehaviourDetail, CustomDamageType.HP,
+                            unit.GetResistHP(item.BehaviourDetail)));
+                        atkResistType.Add(new AtkResistType(item.BehaviourDetail, CustomDamageType.BP,
+                            unit.GetResistBP(item.BehaviourDetail)));
+                        break;
+                }
+
+            return atkResistType;
+        }
+
+        public static void SetAttackTypes(this BattleUnitModel unit, List<AtkResistType> list)
+        {
+            foreach (var item in list)
+                if (item.DamageType == CustomDamageType.HP)
+                    unit.Book.SetResistHP(item.BehaviourDetail, item.AtkResist);
+                else
+                    unit.Book.SetResistBP(item.BehaviourDetail, item.AtkResist);
+        }
+
+        public static bool IsNotMassAttackOrSpecialAttack(this BattleDiceCardModel card, int notOverCost = 3)
+        {
+            return card.XmlData.Spec.Ranged != CardRange.FarArea && card.XmlData.Spec.Ranged != CardRange.FarAreaEach &&
+                   card.XmlData.Spec.Ranged != CardRange.Special && card.GetOriginCost() < notOverCost;
         }
     }
 }

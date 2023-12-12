@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using LOR_DiceSystem;
 using LOR_XML;
 using UnityEngine;
+using UtilLoader21341.Enum;
 using UtilLoader21341.Models;
 using UtilLoader21341.StageManager;
 using UtilLoader21341.Util;
@@ -105,5 +107,20 @@ namespace UtilLoader21341
     {
         public string Name { get; set; }
         public string Desc { get; set; }
+    }
+
+    public class AtkResistType
+    {
+        public AtkResistType(BehaviourDetail behaviourDetail, CustomDamageType damageType,
+            AtkResist atkResist = AtkResist.None)
+        {
+            AtkResist = atkResist;
+            BehaviourDetail = behaviourDetail;
+            DamageType = damageType;
+        }
+
+        public AtkResist AtkResist { get; set; }
+        public BehaviourDetail BehaviourDetail { get; set; }
+        public CustomDamageType DamageType { get; set; }
     }
 }
