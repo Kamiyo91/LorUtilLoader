@@ -422,7 +422,7 @@ namespace UtilLoader21341.Util
         {
             if (!active) return null;
             if (owner.bufListDetail.HasBuf<T>()) return owner.GetActiveBuff<T>();
-            return (T)owner.AddBuff<T>(startStacks);
+            return (T)owner.OnAddBuff<T>(startStacks);
         }
     }
 }
