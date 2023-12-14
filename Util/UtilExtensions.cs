@@ -347,6 +347,38 @@ namespace UtilLoader21341.Util
             return buff;
         }
 
+        public static BattleUnitBuf OnAddBuffCustom<T>(this BattleUnitModel owner, int stack,
+            bool destroyat0Stack = false,
+            int minStack = 0, int maxStack = 25)
+            where T : BattleUnitBuf, new()
+        {
+            var buff = owner.GetActiveBuff<T>();
+            if (buff == null)
+            {
+                buff = new T();
+                owner.bufListDetail.AddBuf(buff);
+                buff.stack = 0;
+            }
+
+            buff.OnAddBufCustom(stack, destroyat0Stack, minStack, maxStack);
+            return buff;
+        }
+
+        public static BattleUnitBuf OnAddBuff<T>(this BattleUnitModel owner, int stack)
+            where T : BattleUnitBuf, new()
+        {
+            var buff = owner.GetActiveBuff<T>();
+            if (buff == null)
+            {
+                buff = new T();
+                owner.bufListDetail.AddBuf(buff);
+                buff.stack = 0;
+            }
+
+            buff.OnAddBuf(stack);
+            return buff;
+        }
+
         public static bool IsSupportCharCheck(this BattleUnitModel owner)
         {
             return ModParameters.PassiveOptions.Any(x =>

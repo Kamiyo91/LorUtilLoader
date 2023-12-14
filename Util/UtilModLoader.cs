@@ -178,7 +178,7 @@ namespace UtilLoader21341.Util
             catch (Exception ex)
             {
                 if (error)
-                    Debug.LogError($"Error loading {nameof(T)} packageId : " + packageId + " Error : " + ex.Message);
+                    Debug.LogError($"Error loading {typeof(T)} packageId : " + packageId + " Error : " + ex.Message);
                 return new KeyValuePair<bool, T>(false, default);
             }
         }

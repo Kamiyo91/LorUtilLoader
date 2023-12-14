@@ -581,9 +581,9 @@ namespace UtilLoader21341.Util
         {
             foreach (var item in list)
                 if (item.DamageType == CustomDamageType.HP)
-                    unit.Book.SetResistHP(item.BehaviourDetail, item.AtkResist);
+                    unit._unitData.unitData.bookItem.SetResistHP(item.BehaviourDetail, item.AtkResist);
                 else
-                    unit.Book.SetResistBP(item.BehaviourDetail, item.AtkResist);
+                    unit._unitData.unitData.bookItem.SetResistBP(item.BehaviourDetail, item.AtkResist);
         }
 
         public static bool IsNotMassAttackOrSpecialAttack(this BattleDiceCardModel card, int notOverCost = 3)

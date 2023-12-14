@@ -100,9 +100,12 @@ namespace UtilLoader21341.Util
 
             owner.bufListDetail.AddBufWithoutDuplication(new T());
             owner.cardSlotDetail.RecoverPlayPoint(owner.cardSlotDetail.GetMaxPlayPoint());
-            if (owner.faction == Faction.Player && emotionCardsId != null && emotionCardsId.Any())
+            if (emotionCardsId != null && emotionCardsId.Any())
                 foreach (var id in emotionCardsId)
-                    owner.personalEgoDetail.AddCard(id);
+                    if (owner.faction == Faction.Player)
+                        owner.personalEgoDetail.AddCard(id);
+                    else
+                        owner.allyCardDetail.AddNewCardToDeck(id);
             if (refreshUI) UnitUtil.RefreshCombatUI();
             if (dialog != null && dialog.Any())
                 UnitUtil.BattleAbDialog(owner.view.dialogUI, dialog, color ?? Color.green, positiveColor,
