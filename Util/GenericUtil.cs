@@ -41,6 +41,7 @@ namespace UtilLoader21341.Util
             ModParameters.BaseModFound = assemblies.Any(x =>
                 x.GetName().Name == "BaseMod" && x.GetType("SummonLiberation.Harmony_Patch") != null);
             ModParameters.EmotionCardUtilLoaderFound = assemblies.Any(x => x.GetName().Name == "1EmotionCardUtil");
+            ModParameters.ColorCardCardUtilLoaderFound = assemblies.Any(x => x.GetName().Name == "1CustomColorUtil");
         }
 
         public static void GameOver()

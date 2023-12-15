@@ -46,6 +46,7 @@ namespace UtilLoader21341
         public static bool OnPlayCardEmotion = false;
         public static bool DaatFloorFound = false;
         public static bool EmotionCardUtilLoaderFound = false;
+        public static bool ColorCardCardUtilLoaderFound = false;
         public static bool BaseModFound = false;
         public static bool ModLoaded = false;
         public static bool ChangingAct = false;

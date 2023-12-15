@@ -43,6 +43,8 @@ namespace UtilLoader21341
             ModParameters.Harmony.CreateClassProcessor(typeof(BlockUiRepeat)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(BattleRushHarmonyPatch)).Patch();
             if (!ModParameters.BaseModFound) ModParameters.Harmony.CreateClassProcessor(typeof(UnitLimitPatch)).Patch();
+            if (!ModParameters.ColorCardCardUtilLoaderFound)
+                ModParameters.Harmony.CreateClassProcessor(typeof(SkinProjectionPatch)).Patch();
             if (ModParameters.EmotionCardUtilLoaderFound) EmotionCardPatch();
             else
                 ModParameters.Harmony.CreateClassProcessor(typeof(EmotionSelectionUnitPatchWithoutEmotionUtil)).Patch();

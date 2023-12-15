@@ -190,6 +190,7 @@
     <Compile Include="Harmony\PassiveHarmonyPatch.cs" />
     <Compile Include="Harmony\SkinHarmonyPatch.cs" />
     <Compile Include="Harmony\HotfixTranspilers.cs" />
+    <Compile Include="Harmony\SkinProjectionPatch.cs" />
     <Compile Include="Harmony\StageHarmonyPatch.cs" />
     <Compile Include="Harmony\UnitLimitPatch.cs" />
     <Compile Include="Harmony\UpdateEmotionCoinPatch.cs" />

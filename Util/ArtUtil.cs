@@ -383,10 +383,14 @@ namespace UtilLoader21341.Util
 
         public static void LocalizationCustomBook()
         {
-            var dictionary = CustomizingResourceLoader.Instance._skinData;
+            var dictionary = Singleton<CustomizingResourceLoader>.Instance._skinData;
+            var dictionaryChanged = dictionary.Where(x => x.Value is WorkshopSkinDataExtension).Select(x =>
+                    new KeyValuePair<string, WorkshopSkinDataExtension>(x.Key, x.Value as WorkshopSkinDataExtension))
+                .ToList();
             foreach (var packageId in ModParameters.PackageIds)
-            foreach (var workshopSkinData in dictionary
-                         .Where(x => ModParameters.CustomSkinOptions.Exists(y => y.SkinName == x.Key))
+            foreach (var workshopSkinData in dictionaryChanged
+                         .Where(x => ModParameters.CustomSkinOptions.Exists(y =>
+                             y.SkinName == x.Key && x.Value.PackageId == packageId))
                          .ToList())
             {
                 var customSkinOption =

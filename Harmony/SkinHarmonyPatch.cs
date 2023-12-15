@@ -55,14 +55,49 @@ namespace UtilLoader21341.Harmony
         {
             var tempName = __instance.SelectedUnit._tempName;
             __instance.SelectedUnit.ResetTempName();
+            if (string.IsNullOrEmpty(__instance.SelectedUnit.workshopSkin)) return;
             var keypageItem = ModParameters.KeypageOptions.FirstOrDefault(x =>
                 x.PackageId == __instance.SelectedUnit.bookItem.ClassInfo.id.packageId &&
                 x.KeypageId == __instance.SelectedUnit.bookItem.ClassInfo.id.id);
-            if (keypageItem?.BookCustomOptions == null) return;
-            if (__instance.SelectedUnit.bookItem != __instance.SelectedUnit.CustomBookItem ||
-                !string.IsNullOrEmpty(__instance.SelectedUnit.workshopSkin)) return;
-            __instance.SelectedUnit.customizeData.SetCustomData(keypageItem.BookCustomOptions.CustomFaceData);
-            if (keypageItem.BookCustomOptions.NameTextId != 0) __instance.SelectedUnit.SetTempName(tempName);
+            if (keypageItem?.BookCustomOptions != null)
+            {
+                __instance.SelectedUnit.customizeData.SetCustomData(keypageItem.BookCustomOptions.CustomFaceData);
+                if (keypageItem.BookCustomOptions.NameTextId != 0) __instance.SelectedUnit.SetTempName(tempName);
+                return;
+            }
+
+            var customSkinOption =
+                ModParameters.CustomSkinOptions.FirstOrDefault(x =>
+                    x.SkinName.Contains(__instance.SelectedUnit.workshopSkin));
+            if (customSkinOption?.CharacterNameId == null) return;
+            var locItem = ModParameters.LocalizedItems.FirstOrDefault(x => x.Key == customSkinOption.PackageId);
+            if (locItem.Key == null || locItem.Value == null ||
+                !locItem.Value.EnemyNames.TryGetValue(customSkinOption.CharacterNameId.Value, out var name))
+                return;
+            __instance.SelectedUnit.SetTempName(name);
+        }
+
+        [HarmonyPostfix]
+        [HarmonyPatch(typeof(UnitDataModel), "LoadFromSaveData")]
+        public static void UnitDataModel_LoadFromSaveData(UnitDataModel __instance)
+        {
+            if (string.IsNullOrEmpty(__instance.workshopSkin)) return;
+            var keypageItem = ModParameters.KeypageOptions.FirstOrDefault(x =>
+                x.PackageId == __instance.bookItem.ClassInfo.id.packageId &&
+                x.KeypageId == __instance.bookItem.ClassInfo.id.id);
+            if (keypageItem?.BookCustomOptions != null)
+            {
+                __instance.ResetTempName();
+                return;
+            }
+
+            var skin = ModParameters.CustomSkinOptions.FirstOrDefault(x => x.SkinName == __instance.workshopSkin);
+            if (skin?.CharacterNameId == null) return;
+            var locItem = ModParameters.LocalizedItems.FirstOrDefault(x => x.Key == skin.PackageId);
+            if (locItem.Key == null || locItem.Value == null ||
+                !locItem.Value.EnemyNames.TryGetValue(skin.CharacterNameId.Value, out var name))
+                return;
+            __instance.SetTempName(name);
         }
 
         [HarmonyPrefix]
