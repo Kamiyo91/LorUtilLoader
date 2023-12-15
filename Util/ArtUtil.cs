@@ -33,7 +33,7 @@ namespace UtilLoader21341.Util
                         new Vector2(0f, 0f));
                     var fileNameWithoutExtension = Path.GetFileNameWithoutExtension(fileInfo.FullName);
                     ModParameters.ArtWorks.Add(new CustomSprite
-                        { PackageId = packageId, Name = fileNameWithoutExtension, Sprite = value });
+                    { PackageId = packageId, Name = fileNameWithoutExtension, Sprite = value });
                 }
             }
             catch
@@ -45,49 +45,52 @@ namespace UtilLoader21341.Util
         public static void SetEpisodeSlots(UIBookStoryChapterSlot instance, UIBookStoryPanel panel,
             List<UIBookStoryEpisodeSlot> episodeSlots)
         {
-            var listOfAddedSlots = new List<UIBookStoryEpisodeSlot>();
+            var remainingBooks = new List<BookXmlInfo>();
             foreach (var packageId in ModParameters.PackageIds)
             {
-                var episodeSlot = episodeSlots.FirstOrDefault(x => !listOfAddedSlots.Contains(x) && x.books.Any(y =>
+                var firstLoop = false;
+                var episodeSlot = episodeSlots.FirstOrDefault(x => x.books.Any(y =>
                     y.id.packageId == packageId));
                 foreach (var category in ModParameters.CategoryOptions.Where(x => x.PackageId == packageId))
+                {
                     switch (category.CredenzaType)
                     {
                         case CredenzaEnum.ModifiedCredenza:
-                        {
-                            var panelData = panel.panel.GetChapterBooksData(instance.chapter);
-                            if (panelData == null) continue;
-                            var panelBooks = panelData.FindAll(x =>
-                                x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
-                            if (panelBooks.Any())
                             {
-                                var newSlot = InstatiateAdditionalSlot(instance);
-                                newSlot.Init(panelBooks, instance);
-                                newSlot.episodeText.text = GenericUtil.GetEffectText(packageId,
-                                    "Category", category.CategoryNameId, true);
-                                var icon = GetIcon(category.CustomIconSpriteId,
-                                    category.BaseIconSpriteId,
-                                    panelBooks[0].BookIcon, category.PackageId);
-                                newSlot.episodeIconGlow.sprite = icon;
-                                newSlot.episodeIcon.sprite = icon;
-                                listOfAddedSlots.Add(newSlot);
+                                var panelData = panel.panel.GetChapterBooksData(instance.chapter);
+                                if (panelData == null) continue;
+                                var panelBooks = panelData.FindAll(x =>
+                                    x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
+                                if (panelBooks.Any())
+                                {
+                                    if (firstLoop || episodeSlot == null) episodeSlot = InstatiateAdditionalSlot(instance);
+                                    episodeSlot.Init(panelBooks, instance);
+                                    episodeSlot.episodeText.text = GenericUtil.GetEffectText(packageId,
+                                        "Category", category.CategoryNameId, true);
+                                    var icon = GetIcon(category.CustomIconSpriteId,
+                                        category.BaseIconSpriteId,
+                                        panelBooks[0].BookIcon, category.PackageId);
+                                    episodeSlot.episodeIconGlow.sprite = icon;
+                                    episodeSlot.episodeIcon.sprite = icon;
+                                    firstLoop = true;
+                                }
+                                break;
                             }
-
-                            episodeSlot?.books.RemoveAll(x =>
-                                x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
-                            break;
-                        }
                         case CredenzaEnum.NoCredenza:
-                        {
-                            episodeSlot?.books.RemoveAll(x =>
-                                x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
-                            break;
-                        }
+                            {
+                                episodeSlot?.books.RemoveAll(x =>
+                                    x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
+                                break;
+                            }
                     }
-
-                episodeSlot?.books.RemoveAll(x =>
-                    x.id.packageId == packageId);
+                }
+                remainingBooks = episodeSlot?.books.ToList();
             }
+            var newSlot = InstatiateAdditionalSlot(instance);
+            newSlot.Init(instance.chapter, remainingBooks ?? panel.panel.GetChapterBooksData(instance.chapter) ?? new List<BookXmlInfo>(),
+                instance);
+            foreach (var packageId in ModParameters.PackageIds)
+                newSlot.books.RemoveAll(x => x.id.packageId == packageId);
         }
 
         public static UIBookStoryEpisodeSlot InstatiateAdditionalSlot(UIBookStoryChapterSlot instance)
@@ -395,29 +398,29 @@ namespace UtilLoader21341.Util
                     new KeyValuePair<string, WorkshopSkinDataExtension>(x.Key, x.Value as WorkshopSkinDataExtension))
                 .ToList();
             foreach (var packageId in ModParameters.PackageIds)
-            foreach (var workshopSkinData in dictionaryChanged
-                         .Where(x => ModParameters.CustomSkinOptions.Exists(y =>
-                             y.SkinName == x.Key && x.Value.PackageId == packageId))
-                         .ToList())
-            {
-                var customSkinOption =
-                    ModParameters.CustomSkinOptions.FirstOrDefault(x => workshopSkinData.Key.Contains(x.SkinName));
-                if (customSkinOption?.KeypageId == null || !customSkinOption.UseLocalization) continue;
-                var localization = ModParameters.LocalizedItems.TryGetValue(packageId, out var localizatedItem);
-                if (!localization) continue;
-                var keypageLoc =
-                    localizatedItem.Keypages.FirstOrDefault(x => x.bookID == customSkinOption.KeypageId.Value);
-                if (keypageLoc == null) continue;
-                workshopSkinData.Value.dataName = keypageLoc.bookName;
-                dictionary[workshopSkinData.Key] = workshopSkinData.Value;
-            }
+                foreach (var workshopSkinData in dictionaryChanged
+                             .Where(x => ModParameters.CustomSkinOptions.Exists(y =>
+                                 y.SkinName == x.Key && x.Value.PackageId == packageId))
+                             .ToList())
+                {
+                    var customSkinOption =
+                        ModParameters.CustomSkinOptions.FirstOrDefault(x => workshopSkinData.Key.Contains(x.SkinName));
+                    if (customSkinOption?.KeypageId == null || !customSkinOption.UseLocalization) continue;
+                    var localization = ModParameters.LocalizedItems.TryGetValue(packageId, out var localizatedItem);
+                    if (!localization) continue;
+                    var keypageLoc =
+                        localizatedItem.Keypages.FirstOrDefault(x => x.bookID == customSkinOption.KeypageId.Value);
+                    if (keypageLoc == null) continue;
+                    workshopSkinData.Value.dataName = keypageLoc.bookName;
+                    dictionary[workshopSkinData.Key] = workshopSkinData.Value;
+                }
         }
 
         public static void InitCustomEffects(List<Assembly> assemblies)
         {
             foreach (var assembly in assemblies)
                 assembly.GetTypes().ToList().FindAll(x => x.Name.StartsWith("DiceAttackEffect_"))
-                    .ForEach(delegate(Type x)
+                    .ForEach(delegate (Type x)
                     {
                         ModParameters.CustomEffects[x.Name.Replace("DiceAttackEffect_", "")] = x;
                     });
