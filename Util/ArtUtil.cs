@@ -45,42 +45,49 @@ namespace UtilLoader21341.Util
         public static void SetEpisodeSlots(UIBookStoryChapterSlot instance, UIBookStoryPanel panel,
             List<UIBookStoryEpisodeSlot> episodeSlots)
         {
-            var uibookStoryEpisodeSlot = episodeSlots.LastOrDefault();
+            var listOfAddedSlots = new List<UIBookStoryEpisodeSlot>();
             foreach (var packageId in ModParameters.PackageIds)
-            foreach (var category in ModParameters.CategoryOptions.Where(x => x.PackageId == packageId))
             {
-                if (uibookStoryEpisodeSlot == null) continue;
-                switch (category.CredenzaType)
-                {
-                    case CredenzaEnum.ModifiedCredenza:
+                var episodeSlot = episodeSlots.FirstOrDefault(x => !listOfAddedSlots.Contains(x) && x.books.Any(y =>
+                    y.id.packageId == packageId));
+                foreach (var category in ModParameters.CategoryOptions.Where(x => x.PackageId == packageId))
+                    switch (category.CredenzaType)
                     {
-                        var panelBooks = panel.panel.GetChapterBooksData(instance.chapter).FindAll(x =>
-                            x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
-                        if (panelBooks.Any())
+                        case CredenzaEnum.ModifiedCredenza:
                         {
-                            var newSlot = InstatiateAdditionalSlot(instance);
-                            newSlot.Init(panelBooks, instance);
-                            newSlot.episodeText.text = GenericUtil.GetEffectText(packageId,
-                                "Category", category.CategoryNameId, true);
-                            var icon = GetIcon(category.CustomIconSpriteId,
-                                category.BaseIconSpriteId,
-                                panelBooks[0].BookIcon, category.PackageId);
-                            newSlot.episodeIconGlow.sprite = icon;
-                            newSlot.episodeIcon.sprite = icon;
-                        }
+                            var panelData = panel.panel.GetChapterBooksData(instance.chapter);
+                            if (panelData == null) continue;
+                            var panelBooks = panelData.FindAll(x =>
+                                x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
+                            if (panelBooks.Any())
+                            {
+                                var newSlot = InstatiateAdditionalSlot(instance);
+                                newSlot.Init(panelBooks, instance);
+                                newSlot.episodeText.text = GenericUtil.GetEffectText(packageId,
+                                    "Category", category.CategoryNameId, true);
+                                var icon = GetIcon(category.CustomIconSpriteId,
+                                    category.BaseIconSpriteId,
+                                    panelBooks[0].BookIcon, category.PackageId);
+                                newSlot.episodeIconGlow.sprite = icon;
+                                newSlot.episodeIcon.sprite = icon;
+                                listOfAddedSlots.Add(newSlot);
+                            }
 
-                        uibookStoryEpisodeSlot.books.RemoveAll(x => x.id.packageId == category.PackageId);
-                        ;
-                        break;
+                            episodeSlot?.books.RemoveAll(x =>
+                                x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
+                            break;
+                        }
+                        case CredenzaEnum.NoCredenza:
+                        {
+                            episodeSlot?.books.RemoveAll(x =>
+                                x.id.packageId == category.PackageId && category.CredenzaBooksId.Contains(x.id.id));
+                            break;
+                        }
                     }
-                    case CredenzaEnum.NoCredenza:
-                    {
-                        uibookStoryEpisodeSlot.books.RemoveAll(x => x.id.packageId == category.PackageId);
-                        break;
-                    }
-                }
+
+                episodeSlot?.books.RemoveAll(x =>
+                    x.id.packageId == packageId);
             }
-            //uibookStoryEpisodeSlot?.Init(instance.chapter, uibookStoryEpisodeSlot.books, instance);
         }
 
         public static UIBookStoryEpisodeSlot InstatiateAdditionalSlot(UIBookStoryChapterSlot instance)
