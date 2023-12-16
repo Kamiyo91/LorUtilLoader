@@ -339,5 +339,13 @@ namespace UtilLoader21341.Harmony
             if (skin.CustomHeight == 0) return;
             __instance.ChangeHeight(skin.CustomHeight);
         }
+
+        [HarmonyFinalizer]
+        [HarmonyPatch(typeof(BattleDiceBehavior), "GiveDamage")]
+        public static void BattleDiceBehavior_GiveDamage(BattleUnitModel target)
+        {
+            var buff = target?.GetActiveBuff<BattleUnitBuf_ResistChangeOneHitOnly_DLL21341>();
+            if (buff != null) target.bufListDetail.RemoveBuf(buff);
+        }
     }
 }
