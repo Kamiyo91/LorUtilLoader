@@ -6,7 +6,7 @@ namespace UtilLoader21341.Models
 {
     public class CardOptionsRoot
     {
-        [XmlElement("CardOption")] public List<CardOptionRoot> CardOption;
+        [XmlElement("CardOption")] public List<CardOptionRoot> CardOption = new List<CardOptionRoot>();
     }
 
     public class CardOptionRoot

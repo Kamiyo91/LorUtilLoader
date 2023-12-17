@@ -17,7 +17,7 @@ namespace UtilLoader21341.Models
 
     public class RewardOptionsRoot
     {
-        [XmlElement("RewardOptions")] public List<RewardOptionRoot> RewardOption;
+        [XmlElement("RewardOptions")] public List<RewardOptionRoot> RewardOption = new List<RewardOptionRoot>();
     }
 
     public class DefaultKeywordOption
@@ -57,7 +57,7 @@ namespace UtilLoader21341.Models
 
     public class EtcRoot
     {
-        [XmlElement("Text")] public List<EtcText> Text;
+        [XmlElement("Text")] public List<EtcText> Text = new List<EtcText>();
     }
 
     public class EtcText

@@ -6,7 +6,7 @@ namespace UtilLoader21341.Models
 {
     public class StageOptionsRoot
     {
-        [XmlElement("StageOption")] public List<StageOptionRoot> StageOption;
+        [XmlElement("StageOption")] public List<StageOptionRoot> StageOption = new List<StageOptionRoot>();
     }
 
     public class StageOptionRoot

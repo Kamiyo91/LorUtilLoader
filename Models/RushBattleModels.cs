@@ -15,7 +15,9 @@ namespace UtilLoader21341.Models
         [XmlElement("IsInfinite")] public bool IsInfinite { get; set; }
         [XmlElement("IsRandom")] public bool IsRandom { get; set; }
         [XmlElement("WaveCode")] public string WaveCode { get; set; }
-        [XmlElement("Wave")] public List<RushBattleModelSubRoot> Waves { get; set; }
+
+        [XmlElement("Wave")]
+        public List<RushBattleModelSubRoot> Waves { get; set; } = new List<RushBattleModelSubRoot>();
     }
 
     public class RushBattleModelSubRoot

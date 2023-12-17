@@ -5,7 +5,7 @@ namespace UtilLoader21341.Models
 {
     public class KeypageOptionsRoot
     {
-        [XmlElement("KeypageOption")] public List<KeypageOptionRoot> KeypageOption;
+        [XmlElement("KeypageOption")] public List<KeypageOptionRoot> KeypageOption = new List<KeypageOptionRoot>();
     }
 
     public class KeypageOptionRoot
@@ -43,7 +43,7 @@ namespace UtilLoader21341.Models
     {
         [XmlElement("CustomFaceData")] public bool CustomFaceData;
         [XmlElement("OriginalSkin")] public string OriginalSkin = "";
-        [XmlElement("EgoSkin")] public List<string> EgoSkin;
+        [XmlElement("EgoSkin")] public List<string> EgoSkin = new List<string>();
         [XmlElement("CustomDialogId")] public LorIdRoot CustomDialogId;
 
 

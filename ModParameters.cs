@@ -50,7 +50,6 @@ namespace UtilLoader21341
         public static bool BaseModFound = false;
         public static bool ModLoaded = false;
         public static bool ChangingAct = false;
-        public static bool FirstEntryCredenza = false;
 
         public static Tuple<string, List<string>> NextActManager =
             new Tuple<string, List<string>>(string.Empty, new List<string>());

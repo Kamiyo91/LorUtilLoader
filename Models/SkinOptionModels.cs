@@ -5,12 +5,13 @@ namespace UtilLoader21341.Models
 {
     public class SkinOptionsRoot
     {
-        [XmlElement("SkinOption")] public List<SkinOptionRoot> SkinOption;
+        [XmlElement("SkinOption")] public List<SkinOptionRoot> SkinOption = new List<SkinOptionRoot>();
     }
 
     public class CustomSkinOptionsRoot
     {
-        [XmlElement("CustomSkinOption")] public List<CustomSkinOptionRoot> CustomSkinOption;
+        [XmlElement("CustomSkinOption")]
+        public List<CustomSkinOptionRoot> CustomSkinOption = new List<CustomSkinOptionRoot>();
     }
 
     public class SkinOptionRoot

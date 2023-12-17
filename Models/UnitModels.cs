@@ -5,7 +5,7 @@ namespace UtilLoader21341.Models
 {
     public class UnitModelsRoot
     {
-        [XmlElement("UnitModel")] public List<UnitModelRoot> UnitModels;
+        [XmlElement("UnitModel")] public List<UnitModelRoot> UnitModels = new List<UnitModelRoot>();
     }
 
     public class UnitModelRoot

@@ -5,7 +5,7 @@ namespace UtilLoader21341.Models
 {
     public class BuffOptionsRoot
     {
-        [XmlElement("BuffOption")] public List<BuffOptionRoot> BuffOption;
+        [XmlElement("BuffOption")] public List<BuffOptionRoot> BuffOption = new List<BuffOptionRoot>();
     }
 
     public class BuffOptionRoot

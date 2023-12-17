@@ -5,7 +5,8 @@ namespace UtilLoader21341.Models
 {
     public class AssetsBundleOptionsRoot
     {
-        [XmlElement("AssetsBundleOption")] public List<AssetsBundleOptionRoot> AssetsBundleOption;
+        [XmlElement("AssetsBundleOption")]
+        public List<AssetsBundleOptionRoot> AssetsBundleOption = new List<AssetsBundleOptionRoot>();
     }
 
     public class AssetsBundleOptionRoot

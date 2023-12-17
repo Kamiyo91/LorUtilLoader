@@ -7,7 +7,7 @@ namespace UtilLoader21341.Models
 {
     public class CategoryOptionsRoot
     {
-        [XmlElement("CategoryOption")] public List<CategoryOptionRoot> CategoryOption;
+        [XmlElement("CategoryOption")] public List<CategoryOptionRoot> CategoryOption = new List<CategoryOptionRoot>();
     }
 
     public class CategoryOptionRoot

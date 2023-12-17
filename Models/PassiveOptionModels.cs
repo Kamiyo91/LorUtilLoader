@@ -5,7 +5,7 @@ namespace UtilLoader21341.Models
 {
     public class PassiveOptionsRoot
     {
-        [XmlElement("PassiveOption")] public List<PassiveOptionRoot> PassiveOptions;
+        [XmlElement("PassiveOption")] public List<PassiveOptionRoot> PassiveOptions = new List<PassiveOptionRoot>();
     }
 
     public class PassiveOptionRoot

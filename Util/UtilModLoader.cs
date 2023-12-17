@@ -23,23 +23,40 @@ namespace UtilLoader21341.Util
         {
             foreach (var modContentInfo in Singleton<ModContentManager>.Instance.GetAllMods().Where(modContentInfo =>
                          modContentInfo.activated &&
-                         modContentInfo.invInfo.workshopInfo.uniqueId != ModParameters.UtilDLLPackageId &&
-                         Directory.Exists(modContentInfo.dirInfo.FullName + "/Assemblies" +
-                                          ModParameters.BaseFolderUri)))
+                         modContentInfo.invInfo.workshopInfo.uniqueId != ModParameters.UtilDLLPackageId))
                 try
                 {
-                    var modId = modContentInfo.invInfo.workshopInfo.uniqueId;
+                    var modId = modContentInfo.invInfo?.workshopInfo?.uniqueId;
                     var path = modContentInfo.dirInfo.FullName + "/Assemblies";
-                    ModParameters.PackageIds.Add(modId);
-                    ModParameters.Path.Add(modId, path);
-                    var stopwatch = new Stopwatch();
-                    Debug.Log($"Util Loader Tool : Start loading mod files {modId} at path {path}");
+                    if (string.IsNullOrEmpty(modId) || !Directory.Exists(path)) continue;
+                    var loadBy =
+                        Directory.Exists(modContentInfo.dirInfo.FullName + "/Assemblies" + ModParameters.BaseFolderUri)
+                            ? "XML"
+                            : "";
                     var directoryInfo = new DirectoryInfo(path);
                     var assemblies = (from fileInfo in directoryInfo.GetFiles()
                         where fileInfo.Extension.ToLower() == ".dll" && !IgnoreDll.Contains(fileInfo.FullName)
                         select Assembly.LoadFile(fileInfo.FullName)).ToList();
+                    if (string.IsNullOrEmpty(loadBy) &&
+                        assemblies.Any(x => x.GetType($"{x.GetName().Name}.UtilLoader21341") != null))
+                        loadBy = "DLL";
+                    if (string.IsNullOrEmpty(loadBy)) continue;
+                    ModParameters.PackageIds.Add(modId);
+                    ModParameters.Path.Add(modId, path);
+                    var stopwatch = new Stopwatch();
+                    Debug.Log($"Util Loader Tool : Start loading mod files {modId} at path {path}");
                     stopwatch.Start();
-                    LoadModParameters(path, modId);
+                    var loadByLog = "Parameters loaded by XML";
+                    if (loadBy.Equals("DLL"))
+                    {
+                        loadByLog = "Parameters loaded by DLL";
+                        LoadModParametersFromDLL(modId, assemblies);
+                    }
+                    else
+                    {
+                        LoadModParameters(path, modId);
+                    }
+
                     CardUtil.ChangeCardItem(ItemXmlDataList.instance, modId);
                     ArtUtil.GetArtWorks(new DirectoryInfo(path + "/ArtWork"), modId);
                     LocalizationUtil.AddGlobalLocalize(modId);
@@ -49,12 +66,12 @@ namespace UtilLoader21341.Util
                     ModParameters.Assemblies.AddRange(assemblies);
                     stopwatch.Stop();
                     Debug.Log(
-                        $"Util Loader Tool : Loading mod files {modId} at path {path} finished in {stopwatch.ElapsedMilliseconds} ms");
+                        $"Util Loader Tool : Loading mod files {modId} at path {path} finished in {stopwatch.ElapsedMilliseconds} ms - {loadByLog}");
                 }
                 catch (Exception ex)
                 {
                     Debug.LogError(
-                        $"Error while loading the mod {modContentInfo.invInfo.workshopInfo.uniqueId} - {ex.Message}");
+                        $"Error while loading the mod {modContentInfo.invInfo?.workshopInfo?.uniqueId} - {ex.Message}");
                 }
         }
 
@@ -77,6 +94,60 @@ namespace UtilLoader21341.Util
                     Debug.LogError(
                         $"Error while loading the mod (after) {modContentInfo.invInfo.workshopInfo.uniqueId} - {ex.Message}");
                 }
+        }
+
+        private static void LoadModParametersFromDLL(string modId, List<Assembly> assemblies)
+        {
+            foreach (var assembly in assemblies)
+                LoadModParametersDLLInternal(modId, assembly);
+        }
+
+        private static void LoadModParametersDLLInternal(string modId, Assembly assembly)
+        {
+            var loaderType = assembly.GetType($"{assembly.GetName().Name}.UtilLoader21341");
+            if (loaderType == null) return;
+            ModParameters.DefaultKeyWordOptions.Add(
+                LoadModParametersDLLMethod<DefaultKeywordOption>(loaderType.GetMethod(nameof(DefaultKeywordOption))));
+            ModParameters.CardOptions.AddRange(
+                LoadModParametersDLLMethod<List<CardOptionRoot>>(loaderType.GetMethod(nameof(CardOptionRoot))));
+            ModParameters.CategoryOptions.AddRange(
+                LoadModParametersDLLMethod<List<CategoryOptionRoot>>(loaderType.GetMethod(nameof(CategoryOptionRoot))));
+            ModParameters.RewardOptions.AddRange(
+                LoadModParametersDLLMethod<List<RewardOptionRoot>>(loaderType.GetMethod(nameof(RewardOptionRoot))));
+            ModParameters.KeypageOptions.AddRange(
+                LoadModParametersDLLMethod<List<KeypageOptionRoot>>(loaderType.GetMethod(nameof(KeypageOptionRoot))));
+            ModParameters.PassiveOptions.AddRange(
+                LoadModParametersDLLMethod<List<PassiveOptionRoot>>(loaderType.GetMethod(nameof(PassiveOptionRoot))));
+            ModParameters.SkinOptions.AddRange(
+                LoadModParametersDLLMethod<List<SkinOptionRoot>>(loaderType.GetMethod(nameof(SkinOptionRoot))));
+            ModParameters.CustomSkinOptions.AddRange(
+                LoadModParametersDLLMethod<List<CustomSkinOptionRoot>>(
+                    loaderType.GetMethod(nameof(CustomSkinOptionRoot))));
+            ModParameters.SpriteOptions.AddRange(
+                LoadModParametersDLLMethod<List<SpriteOptionRoot>>(loaderType.GetMethod(nameof(SpriteOptionRoot))));
+            ModParameters.StageOptions.AddRange(
+                LoadModParametersDLLMethod<List<StageOptionRoot>>(loaderType.GetMethod(nameof(StageOptionRoot))));
+            ModParameters.BuffOptions.AddRange(
+                LoadModParametersDLLMethod<List<BuffOptionRoot>>(loaderType.GetMethod(nameof(BuffOptionRoot))));
+            ModParameters.MapModels.AddRange(
+                LoadModParametersDLLMethod<List<MapModelRoot>>(loaderType.GetMethod(nameof(MapModelRoot))));
+            ModParameters.UnitModels.AddRange(
+                LoadModParametersDLLMethod<List<UnitModelRoot>>(loaderType.GetMethod(nameof(UnitModelRoot))));
+            ModParameters.RushBattleModels.AddRange(
+                LoadModParametersDLLMethod<List<RushBattleModelMainRoot>>(
+                    loaderType.GetMethod(nameof(RushBattleModelMainRoot))));
+            var assets =
+                LoadModParametersDLLMethod<AssetsBundleOptionsRoot>(
+                    loaderType.GetMethod(nameof(AssetsBundleOptionsRoot)));
+            if (assets?.AssetsBundleOption == null || !assets.AssetsBundleOption.Any()) return;
+            foreach (var item in assets.AssetsBundleOption)
+                ModParameters.AssetBundle.Add(modId, new Assets(modId, item.Name));
+        }
+
+        public static T LoadModParametersDLLMethod<T>(MethodInfo method) where T : new()
+        {
+            if (method == null) return new T();
+            return (T)method.Invoke(null, null);
         }
 
         private static void LoadModParameters(string path, string modId)

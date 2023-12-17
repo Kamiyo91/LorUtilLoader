@@ -5,7 +5,7 @@ namespace UtilLoader21341.Models
 {
     public class MapModelsRoot
     {
-        [XmlElement("MapModel")] public List<MapModelRoot> MapModels;
+        [XmlElement("MapModel")] public List<MapModelRoot> MapModels = new List<MapModelRoot>();
     }
 
     public class MapModelRoot
@@ -17,7 +17,7 @@ namespace UtilLoader21341.Models
         [XmlElement("UnderX")] public float UnderX = 0.5f;
         [XmlElement("UnderY")] public float UnderY = 0.2777778f;
         [XmlElement("InitBgm")] public bool InitBgm;
-        [XmlElement("CardId")] public List<LorIdRoot> CardIds;
+        [XmlElement("CardId")] public List<LorIdRoot> CardIds = new List<LorIdRoot>();
         [XmlElement("Component")] public string Component = "";
         [XmlElement("MapName")] public string MapName = "";
         [XmlElement("Fx")] public float Fx = 0.5f;
