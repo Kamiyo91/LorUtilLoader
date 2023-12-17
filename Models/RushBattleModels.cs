@@ -22,7 +22,6 @@ namespace UtilLoader21341.Models
         [XmlElement("ReloadOriginalPlayerUnits")]
         public List<SephirahType> ReloadOriginalPlayerUnits = new List<SephirahType>();
 
-        [XmlElement("StartEmotionLevel")] public int StartEmotionLevel;
         [XmlElement("FormationId")] public int FormationId = 1;
         [XmlElement("UnitAllowed")] public int UnitAllowed = 5;
         [XmlElement("WaveOrder")] public int WaveOrder;
