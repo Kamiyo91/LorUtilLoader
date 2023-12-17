@@ -10,41 +10,43 @@ namespace UtilLoader21341.Models
 
     public class RushBattleModelMainRoot
     {
-        [XmlAttribute("PackageId")] public string PackageId { get; set; }
-        [XmlAttribute("Id")] public int Id { get; set; }
-        [XmlElement("IsInfinite")] public bool IsInfinite { get; set; }
-        [XmlElement("IsRandom")] public bool IsRandom { get; set; }
-        [XmlElement("WaveCode")] public string WaveCode { get; set; }
-
-        [XmlElement("Wave")]
-        public List<RushBattleModelSubRoot> Waves { get; set; } = new List<RushBattleModelSubRoot>();
+        [XmlAttribute("Id")] public int Id;
+        [XmlElement("IsInfinite")] public bool IsInfinite;
+        [XmlElement("IsRandom")] public bool IsRandom;
+        [XmlAttribute("PackageId")] public string PackageId = "";
+        [XmlElement("Wave")] public List<RushBattleModelSubRoot> Waves = new List<RushBattleModelSubRoot>();
     }
 
     public class RushBattleModelSubRoot
     {
-        [XmlElement("StageManagerName")] public string StageManagerName { get; set; }
-        [XmlElement("MapStageName")] public List<string> MapStageNames { get; set; } = new List<string>();
-        [XmlElement("EnemyUnit")] public List<UnitModelRoot> UnitModels { get; set; }
-        [XmlElement("CustomUnits")] public List<RushBattleFloorUnitModel> PlayerUnitModels { get; set; }
-        [XmlElement("RecoverPlayerUnits")] public bool RecoverPlayerUnits { get; set; }
-
         [XmlElement("ReloadOriginalPlayerUnits")]
-        public List<SephirahType> ReloadOriginalPlayerUnits { get; set; }
+        public List<SephirahType> ReloadOriginalPlayerUnits = new List<SephirahType>();
 
-        //[XmlElement("StarterMapPhase")] public int StarterMapPhase { get; set; }
-        [XmlElement("StartEmotionLevel")] public int StartEmotionLevel { get; set; }
-        [XmlElement("FormationId")] public int FormationId { get; set; }
+        [XmlElement("StartEmotionLevel")] public int StartEmotionLevel;
+        [XmlElement("FormationId")] public int FormationId = 1;
+        [XmlElement("UnitAllowed")] public int UnitAllowed = 5;
+        [XmlElement("WaveOrder")] public int WaveOrder;
+        [XmlElement("SwitchWaveCode")] public string SwitchWaveCode = "";
+        [XmlElement("LastOneInfinite")] public bool LastOneInfinite;
+        [XmlElement("StageManagerName")] public string StageManagerName = "";
+        [XmlElement("EnemyUnit")] public List<UnitModelRoot> UnitModels = new List<UnitModelRoot>();
+        [XmlElement("MapName")] public List<string> MapNames = new List<string>();
 
-        [XmlElement("UnitAllowed")] public int UnitAllowed { get; set; }
+        [XmlElement("CustomUnits")]
+        public List<RushBattleFloorUnitModel> PlayerUnitModels = new List<RushBattleFloorUnitModel>();
 
-        //[XmlElement("CmhPackageId")] public string CmhPackageId { get; set; }
-        [XmlElement("WaveOrder")] public int WaveOrder { get; set; }
-        [XmlElement("SwitchWaveCode")] public string SwitchWaveCode { get; set; }
+        [XmlElement("RecoverPlayerUnits")] public bool RecoverPlayerUnits;
+
+
+        [XmlElement("WaveCode")] public string WaveCode = "";
+
+
+        [XmlIgnore] public bool Fought { get; set; }
     }
 
     public class RushBattleFloorUnitModel
     {
         [XmlAttribute("Floor")] public SephirahType Floor;
-        [XmlElement("Unit")] public List<UnitModelRoot> UnitModels { get; set; }
+        [XmlElement("Unit")] public List<UnitModelRoot> UnitModels = new List<UnitModelRoot>();
     }
 }

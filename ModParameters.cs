@@ -54,7 +54,8 @@ namespace UtilLoader21341
         public static Tuple<string, List<string>> NextActManager =
             new Tuple<string, List<string>>(string.Empty, new List<string>());
 
-        public static int RandomWaveStart = 0;
+        public static int StartWaveIndex = 0;
+        public static Tuple<bool, int> ChangedFormation = new Tuple<bool, int>(false, 0);
         public static FieldInfo MatchInfoEmotionSelection = null;
         public static Dictionary<string, Assets> AssetBundle = new Dictionary<string, Assets>();
         public static EmenyTeamStageManager_RushBattleLoader_24321 RushBattleManager = null;

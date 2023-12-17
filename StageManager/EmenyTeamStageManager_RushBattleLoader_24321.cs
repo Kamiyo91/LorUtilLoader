@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using UnityEngine;
 using UtilLoader21341.Models;
 using UtilLoader21341.Util;
 
@@ -9,216 +8,98 @@ namespace UtilLoader21341.StageManager
 {
     public class EmenyTeamStageManager_RushBattleLoader_24321 : EnemyTeamStageManager
     {
-        private readonly Dictionary<int, RushBattleModelSubRoot> _clonedPhases =
-            new Dictionary<int, RushBattleModelSubRoot>();
+        private RushBattleModelSubRoot _actualWave;
+        private int _actualWaveIndex;
+        private bool _isRandom;
+        private bool _lastWave;
+        private RushBattleModelSubRoot _nextWave;
 
-        private bool _isLastWave;
-        public RushBattleModelSubRoot ActualPhase;
-
-        public int ActualPhaseInt;
-
-        //public CustomMapHandler Cmh;
-        public bool ForcedChanged;
-        public List<int> FoughtWaves = new List<int>();
-        public bool IsInfinite;
-        public bool IsRandom;
-
-        public RushBattleModelMainRoot MainRushBattleOptions;
-
-        //public int MapPhase;
-        public Dictionary<int, RushBattleModelSubRoot> Phases = new Dictionary<int, RushBattleModelSubRoot>();
-        public string WaveCode = string.Empty;
-
-        public void SetParameter(StageModel stageModel, List<RushBattleModelSubRoot> phases,
-            bool isInfinite = false, bool isRandom = false,
-            bool clearData = false)
+        public void SetParameters()
         {
-            try
-            {
-                IsInfinite = isInfinite;
-                IsRandom = isRandom;
-                foreach (var phase in phases.Select((x, i) => (i, x)))
-                {
-                    Phases.Add(phase.i, phase.x);
-                    _clonedPhases.Add(phase.i, phase.x);
-                }
-
-                if (!Singleton<StageController>.Instance.GetStageModel()
-                        .GetStageStorageData("RushBattlePhaseSave23421", out ActualPhaseInt))
-                    ActualPhaseInt = ModParameters.RandomWaveStart;
-                ActualPhase = Phases[ActualPhaseInt];
-                //MapPhase = ActualPhase.StarterMapPhase;
-                if (clearData || !Singleton<StageController>.Instance.GetStageModel()
-                        .GetStageStorageData("FoughtPhaseSave23421", out FoughtWaves)) FoughtWaves = new List<int>();
-                if (FoughtWaves != null && FoughtWaves.Any())
-                    foreach (var key in FoughtWaves)
-                        Phases.Remove(key);
-                //if (!string.IsNullOrEmpty(ActualPhase.CmhPackageId))
-                //    Cmh = CustomMapHandler.GetCMU(ActualPhase.CmhPackageId);
-                //stageModel.ClassInfo.mapInfo = new List<string>();
-                //foreach (var map in ActualPhase.MapStageNames)
-                //    stageModel.ClassInfo.mapInfo.Add(map);
-                _isLastWave = Phases.Count < 2;
-                if (!IsInfinite && _isLastWave) return;
-                stageModel._waveList.Add(new StageWaveModel());
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(ex.InnerException);
-            }
-        }
-
-        public void ChangeParameters(List<RushBattleModelSubRoot> phases, bool isInfinite = false,
-            bool isRandom = false)
-        {
+            ModParameters.ChangedFormation = new Tuple<bool, int>(false, 0);
             var stageModel = Singleton<StageController>.Instance.GetStageModel();
-            IsInfinite = isInfinite;
-            IsRandom = isRandom;
-            Phases.Clear();
-            _clonedPhases.Clear();
-            FoughtWaves.Clear();
-            foreach (var phase in phases.Select((x, i) => (i, x)))
-            {
-                Phases.Add(phase.i, phase.x);
-                _clonedPhases.Add(phase.i, phase.x);
-            }
-
-            _isLastWave = Phases.Count < 2;
-            if (_isLastWave && !IsInfinite) stageModel._waveList.RemoveAt(stageModel._waveList.Count - 1);
-            ForcedChanged = true;
+            var rushBattleOptions = ModParameters.RushBattleModels.FirstOrDefault(x =>
+                x.PackageId == stageModel.ClassInfo.id.packageId && x.Id == stageModel.ClassInfo.id.id);
+            if (rushBattleOptions == null) return;
+            _isRandom = rushBattleOptions.IsRandom;
+            if (!Singleton<StageController>.Instance.GetStageModel()
+                    .GetStageStorageData("RushBattlePhaseSave23421", out _actualWaveIndex))
+                _actualWaveIndex = ModParameters.StartWaveIndex;
+            _actualWave = rushBattleOptions.Waves[_actualWaveIndex];
+            _lastWave = !rushBattleOptions.IsInfinite && !_actualWave.LastOneInfinite &&
+                        rushBattleOptions.Waves.Where(x => x != _actualWave).All(x => x.Fought);
+            if (!_lastWave) stageModel._waveList.Add(new StageWaveModel());
         }
-
-        //public void SetMapPhase(int value)
-        //{
-        //    MapPhase = value;
-        //}
 
         public override void OnWaveStart()
         {
-            try
-            {
-                Singleton<StageController>.Instance.GetStageModel()
-                    .GetStageStorageData("FoughtSwitchSaved23421", out WaveCode);
-                var stageModel = Singleton<StageController>.Instance.GetStageModel();
-                MainRushBattleOptions = ModParameters.RushBattleModels.FirstOrDefault(x =>
-                    x.Id == stageModel.ClassInfo.id.id && x.PackageId == stageModel.ClassInfo.id.packageId &&
-                    (string.IsNullOrEmpty(WaveCode) || x.WaveCode.Contains(WaveCode)));
-                if (MainRushBattleOptions == null)
-                {
-                    Debug.LogError("Rush Battle Options not Found!");
-                    return;
-                }
-
-                SetParameter(stageModel, MainRushBattleOptions.Waves.OrderBy(x => x.WaveOrder).ToList(),
-                    MainRushBattleOptions.IsInfinite,
-                    MainRushBattleOptions.IsRandom);
-                //if (FoughtWaves != null && FoughtWaves.Any())
-                //    foreach (var key in FoughtWaves)
-                //        Phases.Remove(key);
-                if (ActualPhase.StartEmotionLevel == 0) return;
-                foreach (var unit in BattleObjectManager.instance.GetList(Faction.Enemy))
-                    unit.LevelUpEmotion(ActualPhase.StartEmotionLevel);
-                //if (Cmh == null) return;
-                //foreach (var map in ActualPhase.Maps)
-                //    MapUtil.InitEnemyMapBattleRush(ActualPhase.CmhPackageId, map);
-                //if (MapPhase == -1) return;
-                //Cmh.EnforceMap(MapPhase);
-                //Singleton<StageController>.Instance.CheckMapChange();
-            }
-            catch (Exception ex)
-            {
-                Debug.LogError(ex.InnerException);
-            }
+            SetParameters();
         }
-
-        //public void ChangeMusic(string packageId, string musicFileName, string mapName)
-        //{
-        //    CustomMapHandler.GetCMU(packageId).SetMapBgm(musicFileName, true, mapName);
-        //}
-
-        //public override void OnRoundStart()
-        //{
-        //    if (MapPhase == -1 || Cmh == null) return;
-        //    Cmh.EnforceMap(MapPhase);
-        //}
-
-        //public override void OnRoundEndTheLast()
-        //{
-        //    if (BattleObjectManager.instance.GetAliveList(Faction.Enemy).Count < 1) ChangeInnerPhase();
-        //}
-
-        //public void ChangeInnerPhase()
-        //{
-        //    if (!ActualPhase.InnerPhases.TryGetValue(ActualPhase.ActualInnerPhase, out var units)) return;
-        //    ActualPhase.ActualInnerPhase++;
-        //    foreach (var unit in BattleObjectManager.instance.GetList(Faction.Enemy))
-        //        BattleObjectManager.instance.UnregisterUnit(unit);
-        //    foreach (var model in units.Select((x, i) => (i, x)))
-        //        UnitUtil.AddNewUnitWithDefaultData(model.x, model.i);
-        //}
 
         public override void OnEndBattle()
         {
-            if (_isLastWave && !IsInfinite) return;
+            if (_lastWave || (!BattleObjectManager.instance.GetAliveList(Faction.Player).Any() &&
+                              BattleObjectManager.instance.GetAliveList(Faction.Enemy).Any())) return;
             var stageModel = Singleton<StageController>.Instance.GetStageModel();
-            if (!string.IsNullOrEmpty(WaveCode)) stageModel.SetStageStorgeData("FoughtSwitchSaved23421", WaveCode);
-            if (!string.IsNullOrEmpty(ActualPhase.SwitchWaveCode))
+            var rushBattleOptions = ModParameters.RushBattleModels.FirstOrDefault(x =>
+                x.PackageId == stageModel.ClassInfo.id.packageId && x.Id == stageModel.ClassInfo.id.id);
+            if (rushBattleOptions == null) return;
+            foreach (var wave in rushBattleOptions.Waves.Where(x => x == _actualWave))
+                wave.Fought = true;
+            if (!_lastWave && rushBattleOptions.IsRandom &&
+                rushBattleOptions.Waves.Where(x =>
+                    (string.IsNullOrEmpty(x.WaveCode) && string.IsNullOrEmpty(_actualWave.WaveCode)) ||
+                    x.WaveCode == _actualWave.WaveCode).All(x => x.Fought))
+                foreach (var wave in rushBattleOptions.Waves.Where(x => x.WaveCode == _actualWave.WaveCode))
+                    wave.Fought = false;
+            if (!_lastWave && rushBattleOptions.IsRandom && !string.IsNullOrEmpty(_actualWave.SwitchWaveCode) &&
+                rushBattleOptions.Waves.Where(x => x.WaveCode == _actualWave.SwitchWaveCode).All(x => x.Fought))
+                foreach (var wave in rushBattleOptions.Waves.Where(x => x.WaveCode == _actualWave.SwitchWaveCode))
+                    wave.Fought = false;
+            if (!string.IsNullOrEmpty(_actualWave.WaveCode))
+                stageModel.SetStageStorgeData("FoughtSwitchSaved23421", _actualWave.WaveCode);
+            if (!string.IsNullOrEmpty(_actualWave.SwitchWaveCode))
+                stageModel.SetStageStorgeData("FoughtSwitchSaved23421", _actualWave.SwitchWaveCode);
+            if (!Singleton<StageController>.Instance.GetStageModel()
+                    .GetStageStorageData("FoughtSwitchSaved23421", out string waveCode)) waveCode = string.Empty;
+            if (_isRandom)
             {
-                stageModel.SetStageStorgeData("FoughtSwitchSaved23421", ActualPhase.SwitchWaveCode);
-                var newWaves =
-                    ModParameters.RushBattleModels.FirstOrDefault(x => x.WaveCode.Contains(ActualPhase.SwitchWaveCode));
-                if (newWaves != null)
-                    ChangeParameters(newWaves.Waves, newWaves.IsInfinite, newWaves.IsRandom);
+                var nextWaves = rushBattleOptions.Waves.Where(x =>
+                    (string.IsNullOrEmpty(waveCode) || x.WaveCode == waveCode) && !x.Fought).ToList();
+                _nextWave = RandomUtil.SelectOne(nextWaves);
+                var nextWaveIndex = rushBattleOptions.Waves.IndexOf(_nextWave);
+                stageModel.SetStageStorgeData("RushBattlePhaseSave23421", nextWaveIndex);
+            }
+            else
+            {
+                var order = string.IsNullOrEmpty(_actualWave.SwitchWaveCode) ? _actualWave.WaveOrder + 1 : 0;
+                _nextWave = rushBattleOptions.Waves.FirstOrDefault(x =>
+                    (string.IsNullOrEmpty(waveCode) || x.WaveCode == waveCode) && x.WaveOrder == order);
+                var nextWaveIndex = rushBattleOptions.Waves.IndexOf(_nextWave);
+                stageModel.SetStageStorgeData("RushBattlePhaseSave23421", nextWaveIndex);
             }
 
-            if (ActualPhase.RecoverPlayerUnits)
-                foreach (var unit in BattleObjectManager.instance.GetList(Faction.Player))
-                    unit.UnitReviveAndRecovery(unit.MaxHp, true);
-            var nextWaveModel = stageModel._waveList.ElementAt(Singleton<StageController>.Instance._currentWave);
-            if (nextWaveModel == null) return;
-            if (!ForcedChanged)
-            {
-                FoughtWaves.Add(ActualPhaseInt);
-                Phases.Remove(ActualPhaseInt);
-                stageModel.SetStageStorgeData("FoughtPhaseSave23421", FoughtWaves);
-            }
-
-            ActualPhaseInt = !IsRandom
-                ? ActualPhaseInt++
-                : Phases.Any()
-                    ? Phases.Keys.ElementAt(RandomUtil.Range(0, Phases.Count - 1))
-                    : 0;
-            stageModel.SetStageStorgeData("RushBattlePhaseSave23421", ActualPhaseInt);
-            if (!Phases.TryGetValue(ActualPhaseInt, out ActualPhase))
-            {
-                Debug.LogError($"Entry no more phases - Infinite ? {IsInfinite}");
-                if (!IsInfinite) return;
-                stageModel.SetStageStorgeData("FoughtPhaseSave23421", new List<int>());
-                ActualPhaseInt =
-                    !IsRandom ? 0 : _clonedPhases.Keys.ElementAt(RandomUtil.Range(0, Phases.Count - 1));
-                stageModel.SetStageStorgeData("RushBattlePhaseSave23421", ActualPhaseInt);
-                if (!_clonedPhases.TryGetValue(ActualPhaseInt, out ActualPhase))
-                {
-                    Debug.LogError("Infinite Battle Error - Next Phase not found, Ending the battle");
-                    return;
-                }
-            }
-
+            if (_nextWave == null) return;
             var stageWaveInfo = Singleton<StageController>.Instance.GetCurrentWaveModel()._stageWaveInfo;
-            stageWaveInfo.formationId = Mathf.Clamp(ActualPhase.FormationId, 1, 41);
-            stageWaveInfo.availableNumber = ActualPhase.UnitAllowed;
-            ModParameters.ChangingAct = true;
+            ModParameters.ChangedFormation = new Tuple<bool, int>(true, _nextWave.FormationId);
+            stageWaveInfo.availableNumber = _nextWave.UnitAllowed;
             var mapList = new List<string>();
-            mapList.AddRange(ActualPhase.MapStageNames);
-            ModParameters.NextActManager = new Tuple<string, List<string>>(ActualPhase.StageManagerName, mapList);
-            stageModel._waveList.ElementAt(stageModel._waveList.Count - 1).Init(stageModel, stageWaveInfo);
-            var list = new List<UnitBattleDataModel>();
-            UnitUtil.PreparePreBattleEnemyUnits(ActualPhase.UnitModels, stageModel, list);
-            nextWaveModel.ResetUnitBattleDataList(list);
-            if (!ActualPhase.PlayerUnitModels.Any() && !ActualPhase.ReloadOriginalPlayerUnits.Any()) return;
+            mapList.AddRange(_nextWave.MapNames);
+            ModParameters.ChangingAct = true;
+            ModParameters.NextActManager =
+                new Tuple<string, List<string>>(_nextWave.StageManagerName, mapList);
+            var nextWaveModel = stageModel._waveList.ElementAt(stageModel._waveList.Count - 1);
+            nextWaveModel.Init(stageModel, stageWaveInfo);
+            nextWaveModel._unitList.Clear();
+            foreach (var unitModel in _nextWave.UnitModels)
+                nextWaveModel._unitList.Add(UnitBattleDataModel.CreateUnitBattleDataByEnemyUnitId(stageModel,
+                    new LorId(unitModel.PackageId, unitModel.Id)));
+            if (_actualWave.RecoverPlayerUnits)
+                foreach (var unit in BattleObjectManager.instance.GetAliveList(Faction.Player))
+                    unit.UnitReviveAndRecovery(unit.MaxHp, false);
             foreach (var stageFloor in stageModel.GetAvailableFloorList())
             {
-                var playerUnits = ActualPhase.PlayerUnitModels.Where(x => x.Floor == stageFloor.Sephirah)
+                var playerUnits = _actualWave.PlayerUnitModels.Where(x => x.Floor == stageFloor.Sephirah)
                     .SelectMany(x => x.UnitModels).ToList();
                 if (playerUnits.Any())
                 {
@@ -226,7 +107,7 @@ namespace UtilLoader21341.StageManager
                     UnitUtil.PreparePreBattleAllyUnits(stageFloor, playerUnits, stageModel, stageFloor._unitList);
                 }
 
-                if (!ActualPhase.ReloadOriginalPlayerUnits.Contains(stageFloor.Sephirah)) continue;
+                if (!_actualWave.ReloadOriginalPlayerUnits.Contains(stageFloor.Sephirah)) continue;
                 foreach (var unitDataModel in stageFloor._floorModel.GetUnitDataList()
                              .Where(unitDataModel => stageFloor._unitList.Count < 5))
                     stageFloor._unitList.Add(UnitUtil.InitUnitDefault(stageModel, unitDataModel));
