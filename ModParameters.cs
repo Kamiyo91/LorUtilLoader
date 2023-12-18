@@ -125,4 +125,35 @@ namespace UtilLoader21341
         public BehaviourDetail BehaviourDetail { get; set; }
         public CustomDamageType DamageType { get; set; }
     }
+
+    public class FarAreaMassAttackEffectParameters
+    {
+        public string AttackEffect;
+        public float AttackEffectScale;
+        public ActionDetail AttackMotion;
+        public string AudioFileName;
+        public bool CharacterMove;
+        public bool FollowUnits;
+        public bool IsBaseGameAudio;
+        public string PackageId;
+        public bool SlowMotion;
+        public bool Zoom;
+
+        public FarAreaMassAttackEffectParameters(string packageId, ActionDetail attackMotion, string audioFileName,
+            string attackEffect,
+            float attackEffectScale = 1f, bool isBaseGameAudio = false, bool slowMotion = true, bool zoom = true,
+            bool characterMove = true, bool followUnits = true)
+        {
+            AttackMotion = attackMotion;
+            AudioFileName = audioFileName;
+            AttackEffect = attackEffect;
+            AttackEffectScale = attackEffectScale;
+            IsBaseGameAudio = isBaseGameAudio;
+            SlowMotion = slowMotion;
+            Zoom = zoom;
+            CharacterMove = characterMove;
+            FollowUnits = followUnits;
+            PackageId = packageId;
+        }
+    }
 }
