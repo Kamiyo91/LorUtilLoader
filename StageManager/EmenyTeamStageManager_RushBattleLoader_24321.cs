@@ -92,8 +92,8 @@ namespace UtilLoader21341.StageManager
             nextWaveModel.Init(stageModel, stageWaveInfo);
             nextWaveModel._unitList.Clear();
             foreach (var unitModel in _nextWave.UnitModels)
-                nextWaveModel._unitList.Add(UnitBattleDataModel.CreateUnitBattleDataByEnemyUnitId(stageModel,
-                    new LorId(unitModel.PackageId, unitModel.Id)));
+                nextWaveModel._unitList.Add(UnitUtil.CreateUnitBattleDataByEnemyUnitId(stageModel,
+                    new LorId(unitModel.PackageId, unitModel.Id), unitModel.HideInfo));
             if (_actualWave.RecoverPlayerUnits)
                 foreach (var unit in BattleObjectManager.instance.GetAliveList(Faction.Player))
                     unit.UnitReviveAndRecovery(unit.MaxHp, false);

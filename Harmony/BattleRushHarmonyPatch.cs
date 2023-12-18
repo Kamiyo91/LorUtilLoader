@@ -4,6 +4,7 @@ using System.Linq;
 using HarmonyLib;
 using UtilLoader21341.Models;
 using UtilLoader21341.StageManager;
+using UtilLoader21341.Util;
 
 namespace UtilLoader21341.Harmony
 {
@@ -59,8 +60,8 @@ namespace UtilLoader21341.Harmony
             __instance._unitList.Clear();
             foreach (var unitModel in selectedWave.UnitModels)
                 __instance._unitList.Add(
-                    UnitBattleDataModel.CreateUnitBattleDataByEnemyUnitId(stage,
-                        new LorId(unitModel.PackageId, unitModel.Id)));
+                    UnitUtil.CreateUnitBattleDataByEnemyUnitId(stage,
+                        new LorId(unitModel.PackageId, unitModel.Id), unitModel.HideInfo));
             __instance.team.Init(__instance._unitList, Faction.Enemy, stage.ClassInfo);
         }
 

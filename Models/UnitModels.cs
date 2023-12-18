@@ -19,12 +19,11 @@ namespace UtilLoader21341.Models
         [XmlElement("MaxEmotionLevel")] public int MaxEmotionLevel;
         [XmlElement("AutoPlay")] public bool AutoPlay;
 
-
+        [XmlElement("HideInfo")] public bool HideInfo;
         [XmlAttribute("Id")] public int Id;
 
 
         [XmlAttribute("PackageId")] public string PackageId = "";
-
 
         [XmlElement("SummonedOnPlay")] public bool SummonedOnPlay;
         [XmlElement("UnitNameId")] public int UnitNameId;

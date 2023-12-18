@@ -591,5 +591,38 @@ namespace UtilLoader21341.Util
             return card.XmlData.Spec.Ranged != CardRange.FarArea && card.XmlData.Spec.Ranged != CardRange.FarAreaEach &&
                    card.XmlData.Spec.Ranged != CardRange.Special && card.GetOriginCost() < notOverCost;
         }
+
+        public static UnitBattleDataModel CreateUnitBattleDataByEnemyUnitId(StageModel stage, LorId id, bool hideInfo)
+        {
+            var data = Singleton<EnemyUnitClassInfoList>.Instance.GetData(id);
+            var id2 = data.bookId[RandomUtil.SystemRange(data.bookId.Count)];
+            var unitDataModel = new UnitDataModel(new LorId(data.workshopID, id2));
+            unitDataModel.SetByEnemyUnitClassInfoCustom(data, hideInfo);
+            var unitBattleDataModel = new UnitBattleDataModel(stage, unitDataModel);
+            unitBattleDataModel.Init();
+            return unitBattleDataModel;
+        }
+
+        public static void SetByEnemyUnitClassInfoCustom(this UnitDataModel data, EnemyUnitClassInfo classInfo,
+            bool hideInfo)
+        {
+            data._enemyUnitId = classInfo.id;
+            data.gender = classInfo.gender;
+            data.appearanceType = data.gender;
+            data.isUnknownBattleSetting = hideInfo;
+            var id = classInfo.bookId[RandomUtil.SystemRange(classInfo.bookId.Count)];
+            var bookModel = new BookModel(Singleton<BookXmlList>.Instance.GetData(new LorId(classInfo.workshopID, id)));
+            data.EquipBook(bookModel, true);
+            data.CreateDeckByDeckInfo();
+            data.SetEnemyDropTable(classInfo);
+            data.SetEnemyEmotionList(classInfo.emotionCardList);
+            data.aiScript = classInfo.AiScript;
+            data.SetCustomName(LorId.IsModId(classInfo.workshopID)
+                ? classInfo.name
+                : Singleton<CharactersNameXmlList>.Instance.GetName(classInfo.nameId));
+            if (classInfo.gender != Gender.Creature)
+                data.InitBattleDialogByDefaultBook(bookModel.BookId);
+            data._customizeData.height = classInfo.height;
+        }
     }
 }
