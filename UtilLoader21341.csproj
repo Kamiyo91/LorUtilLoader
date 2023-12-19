@@ -174,12 +174,12 @@
     <Compile Include="Extensions\BattleUnitBuf_ResistChangeOneHitOnly_DLL21341.cs" />
     <Compile Include="Extensions\BattleUnitBuf_Uncontrollable_DLL21341.cs" />
     <Compile Include="Extensions\BattleUnitBuf_Untargetable_DLL21341.cs" />
+    <Compile Include="Extensions\BehaviourAction_SupportAttack_DLL21341.cs" />
     <Compile Include="Extensions\CMUExtensions.cs" />
     <Compile Include="Extensions\FarAreaEffect_MassAttackBase_DLL21341.cs" />
     <Compile Include="Extensions\PassiveAbility_LoneFixer_DLL21341.cs" />
     <Compile Include="Extensions\PassiveAbility_RedirectPassive_DLL21341.cs" />
     <Compile Include="Extensions\WorkshopSkinDataExtension.cs" />
-    <Compile Include="FarAreaEffect_BaseMassAttackEffect_DLL21341.cs" />
     <Compile Include="GameObjects\ChangeDiceOrderGameObject.cs" />
     <Compile Include="GameObjects\SelectableEmotionCardsGameObject.cs" />
     <Compile Include="GameObjects\SephirahSelectableEmotionCardsGameObject.cs" />
