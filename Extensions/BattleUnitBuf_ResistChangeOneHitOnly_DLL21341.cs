@@ -17,12 +17,14 @@ namespace UtilLoader21341.Extensions
 
         public override AtkResist GetResistHP(AtkResist origin, BehaviourDetail detail)
         {
-            return detail == _behaviourDetail ? _resist : base.GetResistHP(origin, detail);
+            if (detail == _behaviourDetail) return origin < _resist ? base.GetResistBP(origin, detail) : _resist;
+            return base.GetResistHP(origin, detail);
         }
 
         public override AtkResist GetResistBP(AtkResist origin, BehaviourDetail detail)
         {
-            return detail == _behaviourDetail ? _resist : base.GetResistHP(origin, detail);
+            if (detail == _behaviourDetail) return origin < _resist ? base.GetResistBP(origin, detail) : _resist;
+            return base.GetResistBP(origin, detail);
         }
 
         public void SetResists(AtkResist resist, BehaviourDetail detail)
