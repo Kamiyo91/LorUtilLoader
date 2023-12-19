@@ -14,16 +14,15 @@ namespace UtilLoader21341.Models
         [XmlElement("Option")] public CardOption Option = CardOption.Basic;
         [XmlElement("Keywords")] public List<string> Keywords = new List<string>();
         [XmlElement("BookId")] public List<LorIdRoot> BookId = new List<LorIdRoot>();
+        [XmlElement("Id")] public List<int> Ids = new List<int>();
+        [XmlElement("OnlyAllyTargetCard")] public bool OnlyAllyTargetCard;
+        [XmlElement("ForceAggro")] public bool ForceAggro;
         [XmlElement("OneSideOnlyCard")] public bool OneSideOnlyCard;
 
         [XmlElement("OneSideOnlyCardOnlyForAlly")]
         public bool OneSideOnlyCardOnlyForAlly;
 
         [XmlElement("IsBaseGameCard")] public bool IsBaseGameCard;
-        [XmlElement("Id")] public List<int> Ids = new List<int>();
-
-
-        [XmlElement("OnlyAllyTargetCard")] public bool OnlyAllyTargetCard;
 
 
         [XmlAttribute("PackageId")] public string PackageId = "";

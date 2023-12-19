@@ -41,11 +41,23 @@ namespace UtilLoader21341.Harmony
                                           Singleton<StageController>.Instance.IsBlockEnemyAggroChange()))
                 return;
             var slottedCard = __instance.cardSlotDetail.cardAry[myIndex];
-            var cardAbility = slottedCard?.card.CreateDiceCardSelfAbilityScript();
-            if (cardAbility != null && !cardAbility.IsTargetChangable(target))
+            if (slottedCard != null)
             {
-                __result = false;
-                return;
+                var cardAbility = slottedCard.card.CreateDiceCardSelfAbilityScript();
+                if (cardAbility != null && !cardAbility.IsTargetChangable(target))
+                {
+                    __result = false;
+                    return;
+                }
+
+                var cardOption = ModParameters.CardOptions.FirstOrDefault(x =>
+                    x.PackageId == slottedCard.card.GetID().packageId && x.Ids.Contains(slottedCard.card.GetID().id) &&
+                    x.ForceAggro);
+                if (cardOption != null)
+                {
+                    __result = true;
+                    return;
+                }
             }
 
             var passive = __instance.GetActivePassive<PassiveAbility_RedirectDiePassive_DLL21341>();
