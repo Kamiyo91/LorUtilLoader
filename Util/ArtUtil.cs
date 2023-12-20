@@ -42,6 +42,11 @@ namespace UtilLoader21341.Util
             }
         }
 
+        public static Sprite GetSpriteFromArtworks(string packageId, string name)
+        {
+            return ModParameters.ArtWorks.FirstOrDefault(x => x.PackageId == packageId && x.Name == name)?.Sprite;
+        }
+
         public static void SetEpisodeSlots(UIBookStoryChapterSlot instance, UIBookStoryPanel panel,
             List<UIBookStoryEpisodeSlot> episodeSlots)
         {

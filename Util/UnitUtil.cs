@@ -626,3 +626,10 @@ namespace UtilLoader21341.Util
         }
     }
 }
+
+
+// Note
+//owner.battleCardResultLog.SetSucceedAtkEvent(delegate
+//{
+//    Method()
+//});

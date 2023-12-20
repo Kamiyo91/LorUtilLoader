@@ -3,6 +3,7 @@ using System.IO;
 using Battle.DiceAttackEffect;
 using UnityEngine;
 using UtilLoader21341.Extensions;
+using Object = UnityEngine.Object;
 
 namespace UtilLoader21341.Util
 {
@@ -80,6 +81,65 @@ namespace UtilLoader21341.Util
             massAttackEffect?.SetParameters(parameters);
             massAttackEffect?.Init(self, Array.Empty<object>());
             return massAttackEffect;
+        }
+
+        public static void CreateDamagedTextEffectCustom(this AttackEffectManager atkManager, int number,
+            BattleUnitModel unit, AtkResist atkResist, Color color, string text = "", BattleUnitModel attacker = null,
+            Sprite icon = null, bool useDirection = false, Vector3? scale = null)
+        {
+            var damageTextEffect = Object.Instantiate(atkManager.damagedTextPrefab, unit.view.damageTextEffectRoot);
+            if (damageTextEffect == null) return;
+            if (icon != null)
+            {
+                damageTextEffect.img_resistIcon.sprite = icon;
+            }
+            else
+            {
+                damageTextEffect.img_resistIcon.enabled = false;
+                damageTextEffect.txt_resist.enabled = false;
+            }
+
+            damageTextEffect.img_resistIconBg.enabled = false;
+            damageTextEffect.img_resistIconFg.enabled = false;
+            damageTextEffect.maxEffect = false;
+            damageTextEffect.isAtk = true;
+            damageTextEffect.txt_resist.text = text;
+            damageTextEffect.txt_resist.color = color;
+            var value = color;
+            value.a = 0.5f;
+            damageTextEffect.txt_resist.fontMaterial.SetColor("_UnderlayColor", value);
+            var finalNumber = 0;
+            if (number > 0)
+            {
+                var num = (int)Mathf.Log10(number);
+                var num2 = (int)Mathf.Pow(10f, num);
+                finalNumber = number / num2;
+            }
+
+            var damageNumber = Object.Instantiate(atkManager.damageNumberPrefabs[finalNumber],
+                damageTextEffect.damageNumParent);
+            damageNumber.SetColor(color, atkResist);
+            damageTextEffect.numberList.Add(damageNumber);
+            if (!useDirection)
+            {
+                if (attacker != null && attacker.view.WorldPosition.x > unit.view.WorldPosition.x)
+                    damageTextEffect.sign = -2f;
+                else damageTextEffect.sign = 2f;
+            }
+            else if (unit.direction == Direction.RIGHT)
+            {
+                damageTextEffect.sign = -2f;
+            }
+            else
+            {
+                damageTextEffect.sign = 2f;
+            }
+
+            var localPosition = damageTextEffect.rotatePivot.localPosition;
+            if (scale.HasValue) localPosition.Scale(new Vector3(scale.Value.x, scale.Value.y, scale.Value.z));
+            damageTextEffect.rotatePivot.localPosition = localPosition;
+            atkManager.SetEffectSizeByCamZoom(damageTextEffect);
+            atkManager.SetEffectSizeByUnitHeight(unit, damageTextEffect);
         }
     }
 }

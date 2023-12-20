@@ -17,6 +17,8 @@ namespace UtilLoader21341.Models
         [XmlElement("Id")] public List<int> Ids = new List<int>();
         [XmlElement("OnlyAllyTargetCard")] public bool OnlyAllyTargetCard;
         [XmlElement("ForceAggro")] public bool ForceAggro;
+
+
         [XmlElement("OneSideOnlyCard")] public bool OneSideOnlyCard;
 
         [XmlElement("OneSideOnlyCardOnlyForAlly")]
