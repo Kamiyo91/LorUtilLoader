@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UtilLoader21341.Models;
 using UtilLoader21341.Util;
 
@@ -46,6 +47,8 @@ namespace UtilLoader21341.StageManager
             if (rushBattleOptions == null) return;
             foreach (var wave in rushBattleOptions.Waves.Where(x => x == _actualWave))
                 wave.Fought = true;
+            foreach (var wave in rushBattleOptions.Waves)
+                Debug.LogError($"Wave Fought - {wave.Fought}");
             if (!_lastWave && rushBattleOptions.IsRandom &&
                 rushBattleOptions.Waves.Where(x =>
                     (string.IsNullOrEmpty(x.WaveCode) && string.IsNullOrEmpty(_actualWave.WaveCode)) ||
