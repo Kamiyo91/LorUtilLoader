@@ -222,6 +222,7 @@
     <Compile Include="Util\BuffUtil.cs" />
     <Compile Include="Util\CardUtil.cs" />
     <Compile Include="Util\CustomEmotionTool.cs" />
+    <Compile Include="Util\CustomFloorUtil.cs" />
     <Compile Include="Util\DiceEffectUtil.cs" />
     <Compile Include="Util\GenericUtil.cs" />
     <Compile Include="Util\LocalizationUtil.cs" />

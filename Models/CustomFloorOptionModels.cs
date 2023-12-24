@@ -13,7 +13,7 @@ namespace UtilLoader21341.Models
 
 
         [XmlElement("PackageId")] public string PackageId = "";
-        [XmlIgnore] public List<EmotionCardXmlInfo> OriginalEmotionCards { get; set; }
-        [XmlIgnore] public List<EmotionEgoXmlInfo> OriginalEgoCards { get; set; }
+        [XmlIgnore] public List<EmotionCardXmlInfo> OriginalEmotionCards { get; set; } = new List<EmotionCardXmlInfo>();
+        [XmlIgnore] public List<EmotionEgoXmlInfo> OriginalEgoCards { get; set; } = new List<EmotionEgoXmlInfo>();
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
+using UI;
 using UtilLoader21341.Util;
 
 namespace UtilLoader21341.Harmony
@@ -17,11 +18,16 @@ namespace UtilLoader21341.Harmony
             __state = newBook;
             if (ModParameters.EmotionCardUtilLoaderFound && __instance.isSephirah &&
                 ModParameters.EgoAndEmotionCardChanged.ContainsKey(__instance.OwnerSephirah))
-                if (ModParameters.EgoAndEmotionCardChanged[__instance.OwnerSephirah].IsActive)
+            {
+                CustomFloorUtil.ResetFloor(__instance.OwnerSephirah);
+                if (UI.UIController.Instance.CurrentUIPhase == UIPhase.BattleSetting)
                 {
-                    CardUtil.RevertAbnoAndEgo(__instance.OwnerSephirah);
-                    ModParameters.EgoAndEmotionCardChanged[__instance.OwnerSephirah] = new SavedFloorOptions();
+                    var ui =
+                        UI.UIController.Instance.GetUIPanel(UIPanelType.CharacterList_Right) as
+                            UILibrarianCharacterListPanel;
+                    ui?.SetLibrarianCharacterListPanel_Battle();
                 }
+            }
 
             if (!ModParameters.PackageIds.Contains(__instance.bookItem.ClassInfo.id.packageId)) return;
             var bookOptions =
@@ -54,16 +60,32 @@ namespace UtilLoader21341.Harmony
                         {
                             bookOptions.BookCustomOptions.OriginalSkin
                         };
-                if (ModParameters.EmotionCardUtilLoaderFound && __instance.isSephirah &&
-                    bookOptions.CustomFloorOptions != null)
-                    if (ModParameters.EgoAndEmotionCardChanged.ContainsKey(__instance.OwnerSephirah))
+                if (ModParameters.EmotionCardUtilLoaderFound && __instance.isSephirah)
+                {
+                    if (bookOptions.CustomFloorOptions != null)
                     {
-                        ModParameters.EgoAndEmotionCardChanged[__instance.OwnerSephirah] =
-                            new SavedFloorOptions(true, bookOptions.CustomFloorOptions, __state.ClassInfo.id.id);
-                        CardUtil.SaveCardsBeforeChange(__instance.OwnerSephirah);
-                        CardUtil.ChangeAbnoAndEgo(__instance.OwnerSephirah,
-                            bookOptions.CustomFloorOptions);
+                        CustomFloorUtil.ChangeFloor(bookOptions.CustomFloorOptions, __instance.OwnerSephirah,
+                            __state.ClassInfo.id.id);
                     }
+                    else
+                    {
+                        var customFloorPassive = ModParameters.PassiveOptions.FirstOrDefault(x =>
+                            __state.GetPassiveInfoList().Exists(y =>
+                                y.passive.id.id == x.PassiveId && y.passive.id.packageId == x.PackageId &&
+                                x.CustomFloorOptions != null));
+                        if (customFloorPassive != null)
+                            CustomFloorUtil.ChangeFloor(customFloorPassive.CustomFloorOptions, __instance.OwnerSephirah,
+                                __state.ClassInfo.id.id, customFloorPassive.PassiveId);
+                    }
+
+                    if (UI.UIController.Instance.CurrentUIPhase == UIPhase.BattleSetting)
+                    {
+                        var ui =
+                            UI.UIController.Instance.GetUIPanel(UIPanelType.CharacterList_Right) as
+                                UILibrarianCharacterListPanel;
+                        ui?.SetLibrarianCharacterListPanel_Battle();
+                    }
+                }
 
                 if (!UnitUtil.CheckSkinUnitData(__instance))
                 {

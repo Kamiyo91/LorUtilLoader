@@ -134,14 +134,23 @@ namespace UtilLoader21341.Harmony
             try
             {
                 var passiveOptions = ModParameters.PassiveOptions.Where(x => unequipbook.GetPassiveModelList().Exists(
-                        y => (x.PackageId == y.originData.currentpassive.id.packageId &&
-                              x.PassiveId == y.originData.currentpassive.id.id) ||
-                             (x.PackageId == y.reservedData.currentpassive.id.packageId &&
-                              x.PassiveId == y.reservedData.currentpassive.id.id)))
-                    .SelectMany(x => x.ChainReleasePassives).ToList();
+                    y => (x.PackageId == y.originData.currentpassive.id.packageId &&
+                          x.PassiveId == y.originData.currentpassive.id.id) ||
+                         (x.PackageId == y.reservedData.currentpassive.id.packageId &&
+                          x.PassiveId == y.reservedData.currentpassive.id.id))).ToList();
+                if (ModParameters.EmotionCardUtilLoaderFound)
+                {
+                    var passives = passiveOptions.Where(x => x.CustomFloorOptions != null);
+                    foreach (var p in passives)
+                        CustomFloorUtil.ResetFloorByPassiveId(p.CustomFloorOptions.PackageId, p.PassiveId);
+                }
+
+                var passiveOptionsToRelease = passiveOptions.SelectMany(x => x.ChainReleasePassives).ToList();
                 var passiveToRelease = __instance.GetPassiveModelList().Where(x =>
-                    passiveOptions.Contains(x.originData.currentpassive.id.ToLorIdRoot(), new LorIdRootComparer()) ||
-                    passiveOptions.Contains(x.reservedData.currentpassive.id.ToLorIdRoot(), new LorIdRootComparer()));
+                    passiveOptionsToRelease.Contains(x.originData.currentpassive.id.ToLorIdRoot(),
+                        new LorIdRootComparer()) ||
+                    passiveOptionsToRelease.Contains(x.reservedData.currentpassive.id.ToLorIdRoot(),
+                        new LorIdRootComparer()));
                 foreach (var passiveRelease in passiveToRelease.Distinct())
                     __instance.ReleasePassive(passiveRelease);
             }
@@ -177,6 +186,7 @@ namespace UtilLoader21341.Harmony
             }
             catch (Exception)
             {
+                // ignored
             }
         }
 
@@ -234,6 +244,24 @@ namespace UtilLoader21341.Harmony
             }
         }
 
+        [HarmonyPrefix]
+        [HarmonyPatch(typeof(UIPassiveSuccessionPopup), "Close")]
+        public static void UIPassiveSuccessionPopup_Close_Pre(UIPassiveSuccessionPopup __instance)
+        {
+            if (__instance.CurrentBookModel == null) return;
+            try
+            {
+                if (ModParameters.EmotionCardUtilLoaderFound && __instance._currentUnit != null &&
+                    __instance._currentUnit.isSephirah && ModParameters.EgoAndEmotionCardChanged.ContainsKey(__instance
+                        ._currentUnit
+                        .OwnerSephirah)) CustomFloorUtil.ResetFloor(__instance._currentUnit.OwnerSephirah);
+            }
+            catch (Exception)
+            {
+                // ignored
+            }
+        }
+
         [HarmonyPostfix]
         [HarmonyPatch(typeof(UIPassiveSuccessionPopup), "Close")]
         public static void UIPassiveSuccessionPopup_Close(UIPassiveSuccessionPopup __instance)
@@ -241,6 +269,23 @@ namespace UtilLoader21341.Harmony
             if (__instance.CurrentBookModel == null) return;
             try
             {
+                if (ModParameters.EmotionCardUtilLoaderFound && __instance._currentUnit != null &&
+                    __instance._currentUnit.isSephirah)
+                {
+                    var passive = ModParameters.PassiveOptions.FirstOrDefault(x =>
+                        __instance.CurrentBookModel.GetPassiveInfoList().Exists(y =>
+                            x.PackageId == y.passive.id.packageId && x.PassiveId == y.passive.id.id &&
+                            x.CustomFloorOptions != null));
+                    if (passive != null)
+                        CustomFloorUtil.ChangeFloor(passive.CustomFloorOptions,
+                            __instance._currentUnit.OwnerSephirah,
+                            __instance.CurrentBookModel.BookId.id, passive.PassiveId);
+                    var ui =
+                        UI.UIController.Instance.GetUIPanel(UIPanelType.CharacterList_Right) as
+                            UILibrarianCharacterListPanel;
+                    ui?.SetLibrarianCharacterListPanel_Default(__instance._currentUnit.OwnerSephirah);
+                }
+
                 SingletonBehavior<UIEquipDeckCardList>.Instance.SetDeckLayout();
             }
             catch (Exception)
