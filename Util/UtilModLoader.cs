@@ -146,8 +146,17 @@ namespace UtilLoader21341.Util
 
         public static T LoadModParametersDLLMethod<T>(MethodInfo method) where T : new()
         {
-            if (method == null) return new T();
-            return (T)method.Invoke(null, null);
+            try
+            {
+                if (method == null) return new T();
+                return (T)method.Invoke(null, null);
+            }
+            catch (Exception)
+            {
+                Debug.LogError(
+                    $"Error Invoking the method - {method?.Name ?? "Not Found"}");
+                return new T();
+            }
         }
 
         private static void LoadModParameters(string path, string modId)
