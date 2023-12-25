@@ -250,6 +250,13 @@ namespace UtilLoader21341.Util
                 return true;
             }
 
+            if (keypageOption.ForceAggroOptions.ForceAggroByBuffByKeywordId.Any(keywordId =>
+                    target.bufListDetail.GetActivatedBufList().Any(x => x.keywordId == keywordId)))
+            {
+                result = true;
+                return true;
+            }
+
             if (!keypageOption.ForceAggroOptions.RedirectOnlyWithSlowerSpeed) return false;
             var speed = instance.GetSpeed(myIndex);
             var speed2 = target.GetSpeed(targetIndex);
@@ -275,6 +282,13 @@ namespace UtilLoader21341.Util
                 }
 
                 if (passive.ForceAggroOptions.ForceAggro)
+                {
+                    result = true;
+                    return true;
+                }
+
+                if (passive.ForceAggroOptions.ForceAggroByBuffByKeywordId.Any(keywordId =>
+                        target.bufListDetail.GetActivatedBufList().Any(x => x.keywordId == keywordId)))
                 {
                     result = true;
                     return true;
@@ -307,6 +321,13 @@ namespace UtilLoader21341.Util
                 }
 
                 if (buff.ForceAggroOptions.ForceAggro)
+                {
+                    result = true;
+                    return true;
+                }
+
+                if (buff.ForceAggroOptions.ForceAggroByBuffByKeywordId.Any(keywordId =>
+                        target.bufListDetail.GetActivatedBufList().Any(x => x.keywordId == keywordId)))
                 {
                     result = true;
                     return true;
