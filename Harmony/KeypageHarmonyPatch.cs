@@ -45,6 +45,7 @@ namespace UtilLoader21341.Harmony
         {
             if (force) return;
             var floorChanged = false;
+            if (__state == null) return;
             if (ModParameters.EmotionCardUtilLoaderFound && __instance.isSephirah)
             {
                 var customFloorPassive = ModParameters.PassiveOptions.FirstOrDefault(x =>
@@ -60,7 +61,7 @@ namespace UtilLoader21341.Harmony
                 }
             }
 
-            if (__state == null || !ModParameters.PackageIds.Contains(__state.ClassInfo.id.packageId)) return;
+            if (!ModParameters.PackageIds.Contains(__state.ClassInfo.id.packageId)) return;
             var bookOptions = ModParameters.KeypageOptions.FirstOrDefault(x =>
                 x.PackageId == __state.ClassInfo.id.packageId && x.KeypageId == __state.ClassInfo.id.id);
             if (bookOptions == null) return;
