@@ -44,6 +44,22 @@ namespace UtilLoader21341.Harmony
         public static void UnitDataModel_EquipBookPostfix(UnitDataModel __instance, bool force, BookModel __state)
         {
             if (force) return;
+            var floorChanged = false;
+            if (ModParameters.EmotionCardUtilLoaderFound && __instance.isSephirah)
+            {
+                var customFloorPassive = ModParameters.PassiveOptions.FirstOrDefault(x =>
+                    __state.GetPassiveInfoList().Exists(y =>
+                        y.passive.id.id == x.PassiveId && y.passive.id.packageId == x.PackageId &&
+                        x.CustomFloorOptions != null));
+                if (customFloorPassive != null)
+                {
+                    floorChanged = true;
+                    CustomFloorUtil.ChangeFloor(customFloorPassive.CustomFloorOptions, __instance.OwnerSephirah,
+                        __state.ClassInfo.id.id, customFloorPassive.PassiveId);
+                    ArtUtil.ReloadPreBattleIconsUI();
+                }
+            }
+
             if (__state == null || !ModParameters.PackageIds.Contains(__state.ClassInfo.id.packageId)) return;
             var bookOptions = ModParameters.KeypageOptions.FirstOrDefault(x =>
                 x.PackageId == __state.ClassInfo.id.packageId && x.KeypageId == __state.ClassInfo.id.id);
@@ -60,31 +76,12 @@ namespace UtilLoader21341.Harmony
                         {
                             bookOptions.BookCustomOptions.OriginalSkin
                         };
-                if (ModParameters.EmotionCardUtilLoaderFound && __instance.isSephirah)
+                if (ModParameters.EmotionCardUtilLoaderFound && __instance.isSephirah && !floorChanged)
                 {
                     if (bookOptions.CustomFloorOptions != null)
-                    {
                         CustomFloorUtil.ChangeFloor(bookOptions.CustomFloorOptions, __instance.OwnerSephirah,
                             __state.ClassInfo.id.id);
-                    }
-                    else
-                    {
-                        var customFloorPassive = ModParameters.PassiveOptions.FirstOrDefault(x =>
-                            __state.GetPassiveInfoList().Exists(y =>
-                                y.passive.id.id == x.PassiveId && y.passive.id.packageId == x.PackageId &&
-                                x.CustomFloorOptions != null));
-                        if (customFloorPassive != null)
-                            CustomFloorUtil.ChangeFloor(customFloorPassive.CustomFloorOptions, __instance.OwnerSephirah,
-                                __state.ClassInfo.id.id, customFloorPassive.PassiveId);
-                    }
-
-                    if (UI.UIController.Instance.CurrentUIPhase == UIPhase.BattleSetting)
-                    {
-                        var ui =
-                            UI.UIController.Instance.GetUIPanel(UIPanelType.CharacterList_Right) as
-                                UILibrarianCharacterListPanel;
-                        ui?.SetLibrarianCharacterListPanel_Battle();
-                    }
+                    ArtUtil.ReloadPreBattleIconsUI();
                 }
 
                 if (!UnitUtil.CheckSkinUnitData(__instance))

@@ -280,10 +280,7 @@ namespace UtilLoader21341.Harmony
                         CustomFloorUtil.ChangeFloor(passive.CustomFloorOptions,
                             __instance._currentUnit.OwnerSephirah,
                             __instance.CurrentBookModel.BookId.id, passive.PassiveId);
-                    var ui =
-                        UI.UIController.Instance.GetUIPanel(UIPanelType.CharacterList_Right) as
-                            UILibrarianCharacterListPanel;
-                    ui?.SetLibrarianCharacterListPanel_Default(__instance._currentUnit.OwnerSephirah);
+                    ArtUtil.ReloadSephirahIconUI(__instance._currentUnit.OwnerSephirah);
                 }
 
                 SingletonBehavior<UIEquipDeckCardList>.Instance.SetDeckLayout();

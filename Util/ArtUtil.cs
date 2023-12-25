@@ -423,6 +423,23 @@ namespace UtilLoader21341.Util
             }
         }
 
+        public static void ReloadPreBattleIconsUI()
+        {
+            if (UI.UIController.Instance.CurrentUIPhase != UIPhase.BattleSetting) return;
+            var ui =
+                UI.UIController.Instance.GetUIPanel(UIPanelType.CharacterList_Right) as
+                    UILibrarianCharacterListPanel;
+            ui?.SetLibrarianCharacterListPanel_Battle();
+        }
+
+        public static void ReloadSephirahIconUI(SephirahType sephirah)
+        {
+            var ui =
+                UI.UIController.Instance.GetUIPanel(UIPanelType.CharacterList_Right) as
+                    UILibrarianCharacterListPanel;
+            ui?.SetLibrarianCharacterListPanel_Default(sephirah);
+        }
+
         public static void InitCustomEffects(List<Assembly> assemblies)
         {
             foreach (var assembly in assemblies)
