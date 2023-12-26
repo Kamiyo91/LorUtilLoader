@@ -8,9 +8,10 @@ namespace UtilLoader21341.Util
 {
     public static class PassiveUtil
     {
-        public static void OnWaveStartChangeDialog(this PassiveAbilityBase passive, ref BattleDialogueModel dlg)
+        public static void OnWaveStartChangeDialog(this PassiveAbilityBase passive, ref BattleDialogueModel dlg,
+            bool hidePassive = true)
         {
-            passive.Hide();
+            if (hidePassive) passive.Hide();
             var keypageItem = ModParameters.KeypageOptions.FirstOrDefault(x =>
                 x.PackageId == passive.owner.Book.BookId.packageId && x.KeypageId == passive.owner.Book.BookId.id);
             if (keypageItem?.BookCustomOptions == null) return;
