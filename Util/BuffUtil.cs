@@ -58,7 +58,8 @@ namespace UtilLoader21341.Util
         public static List<KeywordBuf> CanAddBuffCustom(BattleUnitBufListDetail instance, ref KeywordBuf keyword)
         {
             var keywords = new List<KeywordBuf>();
-            foreach (var passive in instance._self.passiveDetail._passiveList.OfType<ISwitchBuff>())
+            foreach (var passive in instance._self.passiveDetail._passiveList.Where(x => x.isActiavted)
+                         .OfType<ISwitchBuff>())
                 keywords.Add(passive.SwitchBuff(keyword));
             if (!keywords.Any()) return keywords;
             keyword = keywords[0];
