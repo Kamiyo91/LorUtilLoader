@@ -107,11 +107,14 @@
     <Compile Include="Extensions\FarAreaEffect_MassAttackBase_DLL21341.cs" />
     <Compile Include="Extensions\PassiveAbility_LoneFixer_DLL21341.cs" />
     <Compile Include="Extensions\PassiveAbility_RedirectPassive_DLL21341.cs" />
+    <Compile Include="Extensions\PassiveAbility_SwitchBuffs_DLL21341.cs" />
+    <Compile Include="Extensions\PassiveAbility_SwitchBuffsOddAndEven_DLL21341.cs" />
     <Compile Include="Extensions\WorkshopSkinDataExtension.cs" />
     <Compile Include="GameObjects\ChangeDiceOrderGameObject.cs" />
     <Compile Include="GameObjects\SelectableEmotionCardsGameObject.cs" />
     <Compile Include="GameObjects\SephirahSelectableEmotionCardsGameObject.cs" />
     <Compile Include="Harmony\BattleRushHarmonyPatch.cs" />
+    <Compile Include="Harmony\BattleUnitBufListDetailHarmonyPatch.cs" />
     <Compile Include="Harmony\CategoryHarmonyPatch.cs" />
     <Compile Include="Harmony\CustomFloorHarmonyPatch.cs" />
     <Compile Include="Harmony\EmotionEgoCardSelectionPatch.cs" />
@@ -125,6 +128,7 @@
     <Compile Include="Harmony\StageHarmonyPatch.cs" />
     <Compile Include="Harmony\UnitLimitPatch.cs" />
     <Compile Include="Harmony\UpdateEmotionCoinPatch.cs" />
+    <Compile Include="Interface\ICanAddBuffCustom.cs" />
     <Compile Include="Models\AssetsBundleOptionModels.cs" />
     <Compile Include="Models\BuffOptionModels.cs" />
     <Compile Include="Models\CardOptionModels.cs" />
@@ -176,6 +180,7 @@
     <Publicize Include="Assembly-CSharp" />
     <Publicize Include="CustomMapUtility" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>

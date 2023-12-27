@@ -37,6 +37,7 @@ namespace UtilLoader21341
             ModParameters.Harmony.CreateClassProcessor(typeof(HotfixTranspilers)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(KeypageHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(PassiveHarmonyPatch)).Patch();
+            ModParameters.Harmony.CreateClassProcessor(typeof(BattleUnitBufListDetailHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(SkinHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(StageHarmonyPatch)).Patch();
             ModParameters.Harmony.CreateClassProcessor(typeof(UpdateEmotionCoinPatch)).Patch();

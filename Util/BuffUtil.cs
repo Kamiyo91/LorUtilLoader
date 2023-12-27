@@ -1,4 +1,7 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UtilLoader21341.Interface;
 
 namespace UtilLoader21341.Util
 {
@@ -50,6 +53,17 @@ namespace UtilLoader21341.Util
                 buff._owner.speedDiceResult[i].breaked = true;
                 buff._owner.view.speedDiceSetterUI.GetSpeedDiceByIndex(i).BreakDice(true, true);
             }
+        }
+
+        public static List<KeywordBuf> CanAddBuffCustom(BattleUnitBufListDetail instance, ref KeywordBuf keyword)
+        {
+            var keywords = new List<KeywordBuf>();
+            foreach (var passive in instance._self.passiveDetail._passiveList.OfType<ISwitchBuff>())
+                keywords.Add(passive.SwitchBuff(keyword));
+            if (!keywords.Any()) return keywords;
+            keyword = keywords[0];
+            keywords.RemoveAt(0);
+            return keywords;
         }
     }
 }
