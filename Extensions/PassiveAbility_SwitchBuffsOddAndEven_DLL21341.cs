@@ -11,17 +11,20 @@ namespace UtilLoader21341.Extensions
         private List<KeywordBuf> _keywords = new List<KeywordBuf>();
         public bool IsOddOrEven;
 
-        public KeywordBuf SwitchBuff(KeywordBuf bufType)
+        public bool SwitchBuff(KeywordBuf bufType, out KeywordBuf outKeywordBuf)
         {
-            if (!_active) return bufType;
+            outKeywordBuf = KeywordBuf.None;
+            if (!_active) return false;
             switch (IsOddOrEven)
             {
                 case true when _keywords[0] == bufType:
-                    return _keywords[1];
+                    outKeywordBuf = _keywords[1];
+                    return true;
                 case false when _keywords[1] == bufType:
-                    return _keywords[0];
+                    outKeywordBuf = _keywords[0];
+                    return true;
                 default:
-                    return bufType;
+                    return false;
             }
         }
 

@@ -2,6 +2,6 @@
 {
     public interface ISwitchBuff
     {
-        KeywordBuf SwitchBuff(KeywordBuf bufType);
+        bool SwitchBuff(KeywordBuf bufType, out KeywordBuf outKeywordBuf);
     }
 }

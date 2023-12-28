@@ -1,4 +1,6 @@
-﻿using UtilLoader21341.Interface;
+﻿using System.Collections.Generic;
+using System.Linq;
+using UtilLoader21341.Interface;
 
 namespace UtilLoader21341.Extensions
 {
@@ -7,12 +9,14 @@ namespace UtilLoader21341.Extensions
         private bool _active;
         private bool _addOneExtra;
         private KeywordBuf _buffToAdd;
-        private KeywordBuf _buffToRemove;
+        private List<KeywordBuf> _buffToRemove;
 
-        public KeywordBuf SwitchBuff(KeywordBuf bufType)
+        public bool SwitchBuff(KeywordBuf bufType, out KeywordBuf outKeywordBuf)
         {
-            if (_active && _buffToRemove == bufType) return _buffToAdd;
-            return bufType;
+            outKeywordBuf = KeywordBuf.None;
+            if (!_active || !_buffToRemove.Contains(bufType)) return false;
+            outKeywordBuf = _buffToAdd;
+            return true;
         }
 
         public override void OnRoundStartAfter()
@@ -25,7 +29,7 @@ namespace UtilLoader21341.Extensions
             _active = value;
         }
 
-        public void SetKeywords(KeywordBuf buffToAdd, KeywordBuf buffToRemove)
+        public void SetKeywords(KeywordBuf buffToAdd, List<KeywordBuf> buffToRemove)
         {
             _buffToAdd = buffToAdd;
             _buffToRemove = buffToRemove;
@@ -44,18 +48,23 @@ namespace UtilLoader21341.Extensions
 
         public void ConvertBuff()
         {
-            var buffStacksThisScene = owner.bufListDetail.GetKewordBufStack(_buffToRemove);
-            var buffNextScene = owner.bufListDetail._readyBufList.Find(x => x.bufType == _buffToRemove);
-            if (buffNextScene != null)
+            var stackThisScene = _buffToRemove.Sum(buff => owner.bufListDetail.GetKewordBufStack(buff));
+            var buffsNextScene = _buffToRemove
+                .Select(buff => owner.bufListDetail._readyBufList.Find(x => x.bufType == buff)).ToList();
+            if (buffsNextScene.Any())
             {
-                owner.bufListDetail.AddKeywordBufByEtc(_buffToAdd, buffNextScene.stack, owner);
-                owner.bufListDetail.GetReadyBufList().RemoveAll(x => x.bufType == _buffToRemove);
+                var buffStackNextScene = buffsNextScene.Sum(buff => buff.stack);
+                if (buffStackNextScene > 0)
+                {
+                    owner.bufListDetail.AddKeywordBufByEtc(_buffToAdd, buffStackNextScene, owner);
+                    owner.bufListDetail.GetReadyBufList().RemoveAll(x => _buffToRemove.Contains(x.bufType));
+                }
             }
 
-            if (buffStacksThisScene != 0)
+            if (stackThisScene != 0)
             {
-                owner.bufListDetail.AddKeywordBufThisRoundByEtc(_buffToAdd, buffStacksThisScene, owner);
-                owner.bufListDetail.GetActivatedBufList().RemoveAll(x => x.bufType == _buffToRemove);
+                owner.bufListDetail.AddKeywordBufThisRoundByEtc(_buffToAdd, stackThisScene, owner);
+                owner.bufListDetail.GetActivatedBufList().RemoveAll(x => _buffToRemove.Contains(x.bufType));
             }
 
             if (_addOneExtra) owner.bufListDetail.AddKeywordBufThisRoundByEtc(_buffToAdd, 1, owner);

@@ -55,15 +55,16 @@ namespace UtilLoader21341.Util
             }
         }
 
-        public static List<KeywordBuf> CanAddBuffCustom(BattleUnitBufListDetail instance, ref KeywordBuf keyword)
+        public static HashSet<KeywordBuf> CanAddBuffCustom(BattleUnitBufListDetail instance, ref KeywordBuf keyword)
         {
-            var keywords = new List<KeywordBuf>();
+            var keywords = new HashSet<KeywordBuf>();
             foreach (var passive in instance._self.passiveDetail._passiveList.Where(x => x.isActiavted)
                          .OfType<ISwitchBuff>())
-                keywords.Add(passive.SwitchBuff(keyword));
+                if (passive.SwitchBuff(keyword, out var changedKeyword))
+                    keywords.Add(changedKeyword);
             if (!keywords.Any()) return keywords;
-            keyword = keywords[0];
-            keywords.RemoveAt(0);
+            keyword = keywords.FirstOrDefault();
+            keywords.Remove(keyword);
             return keywords;
         }
     }
