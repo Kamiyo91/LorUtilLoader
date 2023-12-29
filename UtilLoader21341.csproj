@@ -105,6 +105,7 @@
     <Compile Include="Extensions\BehaviourAction_SupportAttack_DLL21341.cs" />
     <Compile Include="Extensions\CMUExtensions.cs" />
     <Compile Include="Extensions\FarAreaEffect_MassAttackBase_DLL21341.cs" />
+    <Compile Include="Extensions\PassiveAbility_CanRedirectPassive_DLL21341.cs" />
     <Compile Include="Extensions\PassiveAbility_LoneFixer_DLL21341.cs" />
     <Compile Include="Extensions\PassiveAbility_RedirectPassive_DLL21341.cs" />
     <Compile Include="Extensions\PassiveAbility_SwitchBuffs_DLL21341.cs" />
@@ -128,7 +129,8 @@
     <Compile Include="Harmony\StageHarmonyPatch.cs" />
     <Compile Include="Harmony\UnitLimitPatch.cs" />
     <Compile Include="Harmony\UpdateEmotionCoinPatch.cs" />
-    <Compile Include="Interface\ICanAddBuffCustom.cs" />
+    <Compile Include="Interface\ICanRedirect.cs" />
+    <Compile Include="Interface\ISwitchBuff.cs" />
     <Compile Include="Models\AssetsBundleOptionModels.cs" />
     <Compile Include="Models\BuffOptionModels.cs" />
     <Compile Include="Models\CardOptionModels.cs" />

@@ -8,6 +8,7 @@ using UI;
 using UnityEngine;
 using UtilLoader21341.Comparers;
 using UtilLoader21341.Extensions;
+using UtilLoader21341.Interface;
 using UtilLoader21341.Models;
 using UtilLoader21341.Util;
 using Workshop;
@@ -62,6 +63,17 @@ namespace UtilLoader21341.Harmony
 
             var passive = __instance.GetActivePassive<PassiveAbility_RedirectDiePassive_DLL21341>();
             if (passive != null && passive.SpeedDieSlot == myIndex)
+            {
+                __result = true;
+                return;
+            }
+
+            BattleUnitModel targetedUnit = null;
+            if (targetIndex < target.cardSlotDetail.cardAry.Count)
+                if (target.cardSlotDetail.cardAry[targetIndex] != null)
+                    targetedUnit = target.cardSlotDetail.cardAry[targetIndex].target;
+            if (__instance.passiveDetail.PassiveList.OfType<ICanRedirect>().Any(redirectPassive =>
+                    redirectPassive.CanRedirectAggro(target, targetedUnit)))
             {
                 __result = true;
                 return;
