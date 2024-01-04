@@ -12,7 +12,7 @@ namespace UtilLoader21341.Util
             int minStack = 0, int maxStack = 25, bool destroyedAt0Stack = false)
         {
             if (adderStackEachScene != 0)
-                buff.OnAddBufCustom(adderStackEachScene, destroyedAt0Stack, minStack, maxStack);
+                buff.AddBufCustom(adderStackEachScene, destroyedAt0Stack, minStack, maxStack);
             if (infinite) return;
             if (lastForXScenes > 0)
             {
@@ -28,14 +28,6 @@ namespace UtilLoader21341.Util
 
             if (!lastOneScene) return;
             if (motionChanged) buff._owner.view.charAppearance.ChangeMotion(ActionDetail.Default);
-        }
-
-        public static void OnAddBufCustom(this BattleUnitBuf buff, int addedStack, bool destroyedAt0Stack = false,
-            int minStack = 0, int maxStack = 25)
-        {
-            buff.stack += addedStack;
-            buff.stack = Mathf.Clamp(buff.stack, minStack, maxStack);
-            if (destroyedAt0Stack && buff.stack == 0) buff._owner.bufListDetail.RemoveBuf(buff);
         }
 
         public static void Init(BattleUnitModel owner, ActionDetail actionDetail)
@@ -66,6 +58,54 @@ namespace UtilLoader21341.Util
             keyword = keywords.FirstOrDefault();
             keywords.Remove(keyword);
             return keywords;
+        }
+
+        public static BattleUnitBuf AddBuffCustom<T>(this BattleUnitModel owner, int stack,
+            bool destroyat0Stack = false,
+            int minStack = 0, int maxStack = 25)
+            where T : BattleUnitBuf, new()
+        {
+            var buff = owner.GetActiveBuff<T>();
+            if (buff == null)
+            {
+                buff = new T { stack = 0 };
+                owner.bufListDetail.AddBuf(buff);
+                buff.stack = 0;
+            }
+
+            buff.AddBufCustom(stack, destroyat0Stack, minStack, maxStack);
+            return buff;
+        }
+
+        public static BattleUnitBuf AddBuffCustom<T>(this T buff, BattleUnitModel owner, int stack,
+            bool destroyat0Stack = false,
+            int minStack = 0, int maxStack = 25)
+            where T : BattleUnitBuf, new()
+        {
+            if (owner.GetActiveBuff<T>() == null)
+            {
+                buff = new T { stack = 0 };
+                owner.bufListDetail.AddBuf(buff);
+            }
+
+            buff.AddBufCustom(stack, destroyat0Stack, minStack, maxStack);
+            return buff;
+        }
+
+        public static T CheckPermanentBuff<T>(this BattleUnitModel owner, bool active = true, int startStacks = 0)
+            where T : BattleUnitBuf, new()
+        {
+            if (!active) return null;
+            if (owner.bufListDetail.HasBuf<T>()) return owner.GetActiveBuff<T>();
+            return (T)owner.AddBuffCustom<T>(startStacks);
+        }
+
+        public static void AddBufCustom(this BattleUnitBuf buff, int addedStack, bool destroyedAt0Stack = false,
+            int minStack = 0, int maxStack = 25)
+        {
+            buff.stack += addedStack;
+            buff.stack = Mathf.Clamp(buff.stack, minStack, maxStack);
+            if (destroyedAt0Stack && buff.stack == 0) buff._owner.bufListDetail.RemoveBuf(buff);
         }
     }
 }

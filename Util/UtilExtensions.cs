@@ -328,57 +328,6 @@ namespace UtilLoader21341.Util
             foreach (var card in emotionCardList) unit.emotionDetail.ApplyEmotionCard(card.XmlInfo);
         }
 
-        public static BattleUnitBuf AddBuff<T>(this BattleUnitModel owner, int stack, bool destroyat0Stack = false,
-            int minStack = 0, int maxStack = 25)
-            where T : BattleUnitBuf, new()
-        {
-            var buff = owner.GetActiveBuff<T>();
-            if (buff == null)
-            {
-                buff = new T();
-                owner.bufListDetail.AddBuf(buff);
-                buff.stack = 0;
-            }
-
-            stack += buff.stack;
-            stack = Mathf.Clamp(stack, minStack, maxStack);
-            buff.stack = stack;
-            if (destroyat0Stack && stack == 0) owner.bufListDetail.RemoveBuf(buff);
-            return buff;
-        }
-
-        public static BattleUnitBuf OnAddBuffCustom<T>(this BattleUnitModel owner, int stack,
-            bool destroyat0Stack = false,
-            int minStack = 0, int maxStack = 25)
-            where T : BattleUnitBuf, new()
-        {
-            var buff = owner.GetActiveBuff<T>();
-            if (buff == null)
-            {
-                buff = new T();
-                owner.bufListDetail.AddBuf(buff);
-                buff.stack = 0;
-            }
-
-            buff.OnAddBufCustom(stack, destroyat0Stack, minStack, maxStack);
-            return buff;
-        }
-
-        public static BattleUnitBuf OnAddBuff<T>(this BattleUnitModel owner, int stack)
-            where T : BattleUnitBuf, new()
-        {
-            var buff = owner.GetActiveBuff<T>();
-            if (buff == null)
-            {
-                buff = new T();
-                owner.bufListDetail.AddBuf(buff);
-                buff.stack = 0;
-            }
-
-            buff.OnAddBuf(stack);
-            return buff;
-        }
-
         public static bool IsSupportCharCheck(this BattleUnitModel owner)
         {
             return ModParameters.PassiveOptions.Any(x =>
@@ -415,14 +364,6 @@ namespace UtilLoader21341.Util
         public static bool ActivatedEmotionCard(this BattleUnitModel owner, string packageId, int id)
         {
             return owner.GetActivatedCustomEmotionCard(packageId, id, out _);
-        }
-
-        public static T CheckPermanentBuff<T>(this BattleUnitModel owner, bool active = true, int startStacks = 0)
-            where T : BattleUnitBuf, new()
-        {
-            if (!active) return null;
-            if (owner.bufListDetail.HasBuf<T>()) return owner.GetActiveBuff<T>();
-            return (T)owner.OnAddBuff<T>(startStacks);
         }
     }
 }

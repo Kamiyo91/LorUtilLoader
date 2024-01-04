@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UtilLoader21341.Util;
 
 namespace UtilLoader21341.Extensions
 {
@@ -37,16 +38,9 @@ namespace UtilLoader21341.Extensions
             owner.view.charAppearance.ChangeMotion(_actionDetail);
         }
 
-        public override void OnAddBuf(int addedStack)
-        {
-            stack += addedStack;
-            stack = Mathf.Clamp(stack, MinStack, MaxStack);
-            if (DestroyedAt0Stack && stack == 0) RemoveBuff();
-        }
-
         public override void OnRoundEnd()
         {
-            if (AdderStackEachScene != 0) OnAddBuf(AdderStackEachScene);
+            if (AdderStackEachScene != 0) this.AddBufCustom(AdderStackEachScene);
             if (_infinite) return;
             if (_lastForXScenes > 0)
             {

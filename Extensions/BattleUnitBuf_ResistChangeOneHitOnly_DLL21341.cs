@@ -1,5 +1,4 @@
 ﻿using LOR_DiceSystem;
-using UtilLoader21341.Util;
 
 namespace UtilLoader21341.Extensions
 {
@@ -31,11 +30,6 @@ namespace UtilLoader21341.Extensions
         {
             _resist = resist;
             _behaviourDetail = detail;
-        }
-
-        public override void OnAddBuf(int addedStack)
-        {
-            this.OnAddBufCustom(addedStack, maxStack: 0);
         }
     }
 }

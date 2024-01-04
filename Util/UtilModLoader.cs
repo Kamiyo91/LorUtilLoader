@@ -79,21 +79,20 @@ namespace UtilLoader21341.Util
         {
             foreach (var modContentInfo in Singleton<ModContentManager>.Instance.GetAllMods().Where(modContentInfo =>
                          modContentInfo.activated &&
-                         modContentInfo.invInfo.workshopInfo.uniqueId != ModParameters.UtilDLLPackageId &&
-                         Directory.Exists(modContentInfo.dirInfo.FullName + "/Assemblies" +
-                                          ModParameters.BaseFolderUri)))
+                         modContentInfo.invInfo.workshopInfo.uniqueId != ModParameters.UtilDLLPackageId))
                 try
                 {
                     var modId = modContentInfo.invInfo.workshopInfo.uniqueId;
                     PassiveUtil.ChangePassiveItem(PassiveXmlList.Instance, modId);
                     CardUtil.ChangeCardItem(ItemXmlDataList.instance, modId);
-                    ArtUtil.PreLoadBufIcons();
                 }
                 catch (Exception ex)
                 {
                     Debug.LogError(
                         $"Error while loading the mod (after) {modContentInfo.invInfo.workshopInfo.uniqueId} - {ex.Message}");
                 }
+
+            ArtUtil.PreLoadBufIcons();
         }
 
         private static void LoadModParametersFromDLL(string modId, List<Assembly> assemblies)
