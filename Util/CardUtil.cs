@@ -367,6 +367,7 @@ namespace UtilLoader21341.Util
                 SephirahType.Chesed, SephirahType.Gebura, SephirahType.Tiphereth,
                 SephirahType.Netzach, SephirahType.Hod, SephirahType.Yesod, SephirahType.Malkuth
             };
+            if(ModParameters.DaatFloorFound) sephirahTypeList.Add((SephirahType)12);
             foreach (var sephirah in sephirahTypeList)
                 ModParameters.EgoAndEmotionCardChanged.Add(sephirah, new SavedFloorOptions());
         }
