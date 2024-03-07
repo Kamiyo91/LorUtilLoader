@@ -105,6 +105,7 @@ namespace UtilLoader21341.Harmony
         }
 
         [HarmonyPatch(typeof(BattleUnitInfoManagerUI), nameof(BattleUnitInfoManagerUI.Initialize))]
+        [HarmonyPriority(Priority.High)]
         [HarmonyPrefix]
         private static void BattleUnitInfoManagerUI_Initialize_Pre(BattleUnitInfoManagerUI __instance)
         {
@@ -116,6 +117,7 @@ namespace UtilLoader21341.Harmony
                 {
                     allyProfileArray2.Add(Object.Instantiate(allyProfileArray2[lastAlly],
                         allyProfileArray2[lastAlly].transform.parent));
+                    allyProfileArray2[i].gameObject.SetActive(false);
                     allyProfileArray2[i].transform.localPosition = allyProfileArray2[lastAlly].transform.localPosition +
                                                                    new Vector3(0f, (i - lastAlly) * Y_SHIFT, 0f);
                 }
@@ -130,8 +132,10 @@ namespace UtilLoader21341.Harmony
             {
                 enemyProfileArray2.Add(Object.Instantiate(enemyProfileArray2[lastEnemy],
                     enemyProfileArray2[lastEnemy].transform.parent));
-                enemyProfileArray2[i].transform.localPosition = enemyProfileArray2[lastEnemy].transform.localPosition +
-                                                                new Vector3(0f, (i - lastEnemy) * Y_SHIFT, 0f);
+                enemyProfileArray2[i].gameObject.SetActive(false);
+                enemyProfileArray2[i].transform.localPosition =
+                    enemyProfileArray2[lastEnemy].transform.localPosition +
+                    new Vector3(0f, (i - lastEnemy) * Y_SHIFT, 0f);
             }
 
             __instance.enemyProfileArray = enemyProfileArray2.ToArray();
