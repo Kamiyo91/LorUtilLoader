@@ -1,7 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using HarmonyLib;
 using UI;
+using UnityEngine;
 using UtilLoader21341.Util;
 
 namespace UtilLoader21341.Harmony
@@ -47,19 +49,25 @@ namespace UtilLoader21341.Harmony
             var floorChanged = false;
             if (__state == null) return;
             if (ModParameters.EmotionCardUtilLoaderFound && __instance.isSephirah)
-            {
-                var customFloorPassive = ModParameters.PassiveOptions.FirstOrDefault(x =>
-                    __state.GetPassiveInfoList().Exists(y =>
-                        y.passive.id.id == x.PassiveId && y.passive.id.packageId == x.PackageId &&
-                        x.CustomFloorOptions != null));
-                if (customFloorPassive != null)
+                try
                 {
-                    floorChanged = true;
-                    CustomFloorUtil.ChangeFloor(customFloorPassive.CustomFloorOptions, __instance.OwnerSephirah,
-                        __state.ClassInfo.id.id, customFloorPassive.PassiveId);
-                    ArtUtil.ReloadPreBattleIconsUI();
+                    var customFloorPassive = ModParameters.PassiveOptions.FirstOrDefault(x =>
+                        __state.GetPassiveInfoList().Exists(y =>
+                            y.passive.id.id == x.PassiveId && y.passive.id.packageId == x.PackageId &&
+                            x.CustomFloorOptions != null));
+                    if (customFloorPassive != null)
+                    {
+                        floorChanged = true;
+                        CustomFloorUtil.ChangeFloor(customFloorPassive.CustomFloorOptions, __instance.OwnerSephirah,
+                            __state.ClassInfo.id.id, customFloorPassive.PassiveId);
+                        ArtUtil.ReloadPreBattleIconsUI();
+                    }
                 }
-            }
+                catch (Exception ex)
+                {
+                    Debug.LogError(
+                        $"Error EquipBook Postfix Emotion Addon - {ex.InnerException?.Message ?? ex.Message}");
+                }
 
             if (!ModParameters.PackageIds.Contains(__state.ClassInfo.id.packageId)) return;
             var bookOptions = ModParameters.KeypageOptions.FirstOrDefault(x =>
