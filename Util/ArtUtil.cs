@@ -217,17 +217,13 @@ namespace UtilLoader21341.Util
             {
                 var index = totalkeysdata.FindIndex(x => x.IsWorkshop && x.workshopId == packageId);
                 if (index == -1) continue;
+                currentStoryBooksDic.Remove(totalkeysdata[index]);
                 totalkeysdata.RemoveAt(index);
                 foreach (var categoryOption in categoryOptions.Where(x => x.PackageId == packageId)
                              .OrderBy(x => x.Order))
                 {
-                    var categoryKey =
-                        currentStoryBooksDic.FirstOrDefault(x =>
-                            x.Key.IsWorkshop && x.Key.workshopId == categoryOption.PackageId);
-                    if (categoryKey.Key != null) currentStoryBooksDic.Remove(categoryKey.Key);
-
                     var actualKey = new UIStoryKeyData(categoryOption.Chapter,
-                        categoryOption.PackageId + $"_{categoryOption.AdditionalValue}");
+                        $"{categoryOption.PackageId}_{categoryOption.AdditionalValue}");
                     if (totalkeysdata.Contains(actualKey) && !categoryOption.BaseGameCategory.HasValue)
                         totalkeysdata.Remove(actualKey);
                     var bookFound = false;
