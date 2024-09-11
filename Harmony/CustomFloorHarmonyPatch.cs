@@ -79,11 +79,8 @@ namespace UtilLoader21341.Harmony
             var icon = ModParameters.ArtWorks.FirstOrDefault(x =>
                 x.PackageId == savedOptions.FloorOptions.PackageId && x.Name == savedOptions.FloorOptions.IconId);
             if (icon == null) return;
-            if (__instance.sephirah != SephirahType.Keter) __instance.imgLockIcon.sprite = icon.Sprite;
-            else if (ModParameters.DaatFloorFound)
-                __instance.transform.GetChild(0).GetChild(3).gameObject.GetComponent<Image>().sprite = icon.Sprite;
-            else
-                __instance.transform.GetChild(1).GetChild(3).gameObject.GetComponent<Image>().sprite = icon.Sprite;
+            __instance.imgLockIcon.sprite = icon.Sprite;
+            if (__instance.imgLeftLockIcon != null) __instance.imgLeftLockIcon.sprite = icon.Sprite;
         }
 
         [HarmonyPatch(typeof(LevelUpUI), "InitBase")]
